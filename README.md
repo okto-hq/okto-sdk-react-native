@@ -1,31 +1,21 @@
 # okto-sdk-react-native
 
-React native okto sdk
+## Description
+
+The `okto-sdk-react-native` is a React Native SDK for integrating Okto services into mobile applications. This SDK provides functionalities to interact with Okto's features and services within your React Native projects.
 
 ## Installation
+
+Install the package in your React Native project:
 
 ```sh
 npm install okto-sdk-react-native
 ```
 
-## Usage
 
-```js
-import { multiply } from 'okto-sdk-react-native';
-
-// ...
-
-const result = await multiply(3, 7);
-```
+## Documentation
+For more detailed usage instructions and API documentation, please visit .
+[Okto SDK Documentation](https://docs.okto.tech/okto_sdk/overview)
 
 ## Contributing
-
-See the [contributing guide](CONTRIBUTING.md) to learn how to contribute to the repository and the development workflow.
-
-## License
-
-MIT
-
----
-
-Made with [create-react-native-library](https://github.com/callstack/react-native-builder-bob)
+Contributions are welcome! If you find any issues or have suggestions for improvements, please open an issue or submit a pull request on the [GitHub repository](https://github.com/okto-hq/okto-sdk-react-native)
