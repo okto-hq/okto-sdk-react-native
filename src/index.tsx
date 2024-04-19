@@ -1,3 +1,17 @@
-export function multiply(a: number, b: number): Promise<number> {
-  return Promise.resolve(a * b);
+import { OktoWallet } from './OktoWallet';
+import { BuildType } from './types';
+
+const RnOktoSdk = new OktoWallet();
+
+export function init(apiKey: string, buildType: BuildType = BuildType.STAGING) {
+  return RnOktoSdk.init(apiKey, buildType);
 }
+
+export function authenticate(
+  idToken: string,
+  callback: (result: any, error: any) => void
+) {
+  RnOktoSdk.authenticate(idToken, callback);
+}
+
+export * from './types';
