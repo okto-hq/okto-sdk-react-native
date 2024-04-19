@@ -21,7 +21,8 @@
       "adaptiveIcon": {
         "foregroundImage": "./assets/adaptive-icon.png",
         "backgroundColor": "#ffffff"
-      }
+      },
+      "package": "com.okto.okto_sdk_example"
     },
     "web": {
       "favicon": "./assets/favicon.png"
