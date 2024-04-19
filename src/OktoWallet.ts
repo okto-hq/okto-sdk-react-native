@@ -11,9 +11,9 @@ export class OktoWallet {
   private axiosInstance: AxiosInstance | null = null;
   private authDetails: AuthDetails | null = null;
 
-  async init(apiKey: string, buildType: BuildType = BuildType.STAGING) {
+  async init(apiKey: string, buildType: BuildType = BuildType.SANDBOX) {
     this.apiKey = apiKey;
-    this.baseUrl = `${baseUrls[buildType]}/api/v1`;
+    this.baseUrl = `${baseUrls[buildType]}/api`;
     this.authDetails = await getJSONLocalStorage(AUTH_DETAILS_KEY);
 
     this.axiosInstance = axios.create({
@@ -43,14 +43,21 @@ export class OktoWallet {
       async (error) => {
         const originalRequest = error.config;
         if (error.response.status === 401) {
-          const newAuthDetails = await this.refreshToken();
-          if (newAuthDetails) {
-            originalRequest.headers.Authorization = `Bearer ${newAuthDetails.refreshToken}`;
-            return axios(originalRequest);
+          try {
+            const newAuthDetails = await this.refreshToken(); // Attempt to refresh token
+            if (newAuthDetails) {
+              // Update the Authorization header with the new access token
+              originalRequest.headers.Authorization = `Bearer ${newAuthDetails.refreshToken}`;
+              return axios(originalRequest);
+            }
+          } catch (refreshError) {
+            // Handle refresh token errors
+            this.updateAuthDetails(null); // Clear auth details if refresh fails
+            return Promise.reject(refreshError);
           }
-          this.updateAuthDetails(null);
         }
         // Return the Promise rejection if refresh didn't work or error is not due to 401
+        this.updateAuthDetails(null);
         return Promise.reject(error);
       }
     );
@@ -58,11 +65,11 @@ export class OktoWallet {
     console.log('init done');
   }
 
-  private async refreshToken() {
+  private async refreshToken(): Promise<AuthDetails | null> {
     if (this.authDetails) {
       try {
         const response = await axios.post(
-          `${this.baseUrl}/refresh_token`,
+          `${this.baseUrl}/v1/refresh_token`,
           {},
           {
             headers: {
@@ -84,7 +91,7 @@ export class OktoWallet {
         console.log('Refresh token: ', 'success');
         return authDetails;
       } catch (error) {
-        return null;
+        throw new Error(`Failed to refresh token`);
       }
     }
     return null;
@@ -100,7 +107,7 @@ export class OktoWallet {
 
     try {
       const response = await axios.post(
-        `${this.baseUrl}/authenticate`,
+        `${this.baseUrl}/v1/authenticate`,
         {
           id_token: idToken,
         },
