@@ -91,7 +91,7 @@ export class OktoWallet {
         console.log('Refresh token: ', 'success');
         return authDetails;
       } catch (error) {
-        throw new Error(`Failed to refresh token`);
+        throw new Error('Failed to refresh token');
       }
     }
     return null;
