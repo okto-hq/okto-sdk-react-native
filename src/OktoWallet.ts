@@ -47,7 +47,7 @@ export class OktoWallet {
             const newAuthDetails = await this.refreshToken(); // Attempt to refresh token
             if (newAuthDetails) {
               // Update the Authorization header with the new access token
-              originalRequest.headers.Authorization = `Bearer ${newAuthDetails.refreshToken}`;
+              originalRequest.headers.Authorization = `Bearer ${newAuthDetails.authToken}`;
               return axios(originalRequest);
             }
           } catch (refreshError) {
