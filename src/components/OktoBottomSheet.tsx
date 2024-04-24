@@ -11,18 +11,22 @@ import {
   TouchableWithoutFeedback,
 } from 'react-native';
 import { OktoWebViewWidget } from './OktoWebViewWidget';
+import { PinScreenWidget } from './PinScreenWidget';
+import { BottomSheetType } from '../types';
 
-const _OktoBottomSheet = ({ isVisible }: { isVisible: boolean }, ref: any) => {
-  const [visible, setVisible] = useState(isVisible);
+const _OktoBottomSheet = ({}: {}, ref: any) => {
+  const [currentScreen, setCurrentScreen] = useState<BottomSheetType | null>(
+    null
+  );
   const [webViewCanGoBack, setWebViewCanGoBack] = useState(false);
   const webViewRef = useRef<any>(null);
 
-  const openSheet = () => {
-    setVisible(true);
+  const openSheet = (screen: BottomSheetType | null) => {
+    setCurrentScreen(screen);
   };
 
   const closeSheet = () => {
-    setVisible(false);
+    setCurrentScreen(null);
   };
 
   useImperativeHandle(ref, () => ({
@@ -41,7 +45,7 @@ const _OktoBottomSheet = ({ isVisible }: { isVisible: boolean }, ref: any) => {
   return (
     <Modal
       transparent
-      visible={visible}
+      visible={currentScreen != null}
       animationType="slide"
       onRequestClose={handleBackPress}
     >
@@ -50,11 +54,20 @@ const _OktoBottomSheet = ({ isVisible }: { isVisible: boolean }, ref: any) => {
           <View style={styles.modalEmpty} />
         </TouchableWithoutFeedback>
         <View style={styles.modalContent}>
-          <OktoWebViewWidget
-            webViewRef={webViewRef}
-            canGoBack={webViewCanGoBack}
-            setCanGoBack={setWebViewCanGoBack}
-          />
+          {currentScreen === BottomSheetType.WIDGET ? (
+            <OktoWebViewWidget
+              webViewRef={webViewRef}
+              canGoBack={webViewCanGoBack}
+              setCanGoBack={setWebViewCanGoBack}
+            />
+          ) : (
+            <PinScreenWidget
+              webViewRef={webViewRef}
+              canGoBack={webViewCanGoBack}
+              setCanGoBack={setWebViewCanGoBack}
+              onClose={()=>{closeSheet();}}
+            />
+          )}
         </View>
       </View>
     </Modal>
