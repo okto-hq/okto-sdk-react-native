@@ -22,19 +22,19 @@ export function PinScreenWidget({
     }
   }
 
-  function getInjecteJs(): string {
-    const token = RnOktoSdk.getAuthToken();
-    const baseUrl = RnOktoSdk.getBaseUrl();
-    const idToken = RnOktoSdk.getIdToken();
-    const apiKey = RnOktoSdk.getApiKey();
+  function getInjectJs(): string {
+    const pinScreenData = {
+      api_key: RnOktoSdk.getApiKey(),
+      base_url: RnOktoSdk.getBaseUrl(),
+      id_token: RnOktoSdk.getIdToken(),
+      token: RnOktoSdk.getAuthToken(),
+    };
     const injectJs = `
     try {
-      window.localStorage.setItem("PinScreenData", '{"api_key":"${apiKey}", "base_url":"${baseUrl}", "id_token":"${idToken}", "token":"${token}"}');
+      window.localStorage.setItem("PinScreenData", '${JSON.stringify(pinScreenData)}');
     } catch(e) {
       window.ReactNativeWebView.postMessage('{"status":"failed"}')
     }
-
-    true;
     `;
     return injectJs;
   }
@@ -60,7 +60,7 @@ export function PinScreenWidget({
       startInLoadingState
       javaScriptEnabled
       domStorageEnabled
-      injectedJavaScriptBeforeContentLoaded={getInjecteJs()}
+      injectedJavaScriptBeforeContentLoaded={getInjectJs()}
       onMessage={onMessage}
       renderLoading={() => <Loading />}
       // webviewDebuggingEnabled
