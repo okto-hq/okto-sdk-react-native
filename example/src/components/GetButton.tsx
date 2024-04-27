@@ -10,7 +10,7 @@ import {
 
 interface GetButtonProps {
   title: string;
-  apiFn: (callback: any) => {};
+  apiFn: (callback: any) => void;
 }
 
 function GetButton({ title, apiFn }: GetButtonProps) {

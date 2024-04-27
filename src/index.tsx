@@ -1,7 +1,18 @@
+import React, {
+  useRef,
+  useContext,
+  createContext,
+  type ReactNode,
+  useEffect,
+} from 'react';
+import { OktoBottomSheet } from './components/OktoBottomSheet';
+import { RnOktoSdk } from './OktoWallet';
 import {
+  BottomSheetType,
   BuildType,
   type ExecuteRawTransaction,
   type NftOrderDetailsQuery,
+  type OktoContextType,
   type OrderQuery,
   type RawTransactionStatusQuery,
   type Theme,
@@ -9,102 +20,148 @@ import {
   type TransferTokens,
 } from './types';
 
-import { RnOktoSdk } from './OktoWallet';
+const OktoContext = createContext<OktoContextType | null>(null);
 
-export function isLoggedIn(): boolean {
-  return RnOktoSdk.isLoggedIn();
-}
+export const OktoProvider = ({
+  children,
+  apiKey,
+  buildType,
+}: {
+  children: ReactNode;
+  apiKey: string;
+  buildType: BuildType;
+}) => {
+  const oktoBottomSheetRef = useRef<any>(null);
 
-export function init(apiKey: string, buildType: BuildType = BuildType.SANDBOX) {
-  return RnOktoSdk.init(apiKey, buildType);
-}
+  const showBottomSheet = (screen: BottomSheetType) => {
+    if (RnOktoSdk.isLoggedIn()) {
+      oktoBottomSheetRef.current?.openSheet(screen);
+    } else {
+      console.error('user not logged in');
+    }
+  };
 
-export function authenticate(
-  idToken: string,
-  callback: (result: any, error: any) => void
-) {
-  RnOktoSdk.authenticate(idToken, callback);
-}
+  const closeBottomSheet = () => {
+    oktoBottomSheetRef.current?.closeSheet();
+  };
 
-export function getPortfolio(callback: (result: any, error: any) => void) {
-  return RnOktoSdk.getPortfolio(callback);
-}
+  function authenticate(
+    idToken: string,
+    callback: (result: any, error: any) => void
+  ) {
+    RnOktoSdk.authenticate(idToken, callback);
+  }
 
-export function getSupportedNetworks(
-  callback: (result: any, error: any) => void
-) {
-  return RnOktoSdk.getSupportedNetworks(callback);
-}
+  function getPortfolio(callback: (result: any, error: any) => void): void {
+    RnOktoSdk.getPortfolio(callback);
+  }
 
-export function getSupportedTokens(
-  callback: (result: any, error: any) => void
-) {
-  return RnOktoSdk.getSupportedTokens(callback);
-}
+  function getSupportedNetworks(
+    callback: (result: any, error: any) => void
+  ): void {
+    RnOktoSdk.getSupportedNetworks(callback);
+  }
 
-export function getUserDetails(callback: (result: any, error: any) => void) {
-  return RnOktoSdk.getUserDetails(callback);
-}
+  function getSupportedTokens(
+    callback: (result: any, error: any) => void
+  ): void {
+    RnOktoSdk.getSupportedTokens(callback);
+  }
 
-export function getWallets(callback: (result: any, error: any) => void) {
-  return RnOktoSdk.getWallets(callback);
-}
+  function getUserDetails(callback: (result: any, error: any) => void): void {
+    RnOktoSdk.getUserDetails(callback);
+  }
 
-export function orderHistory(
-  callback: (result: any, error: any) => void,
-  query: Partial<OrderQuery> = {}
-) {
-  return RnOktoSdk.orderHistory(callback, query);
-}
+  function getWallets(callback: (result: any, error: any) => void): void {
+    RnOktoSdk.getWallets(callback);
+  }
 
-export function getNftOrderDetails(
-  callback: (result: any, error: any) => void,
-  query: Partial<NftOrderDetailsQuery> = {}
-) {
-  return RnOktoSdk.getNftOrderDetails(callback, query);
-}
+  function orderHistory(
+    callback: (result: any, error: any) => void,
+    query: Partial<OrderQuery> = {}
+  ): void {
+    RnOktoSdk.orderHistory(callback, query);
+  }
 
-export function getRawTransactionStatus(
-  callback: (result: any, error: any) => void,
-  query: RawTransactionStatusQuery
-) {
-  return RnOktoSdk.getRawTransactionStatus(callback, query);
-}
+  function getNftOrderDetails(
+    callback: (result: any, error: any) => void,
+    query: Partial<NftOrderDetailsQuery> = {}
+  ): void {
+    RnOktoSdk.getNftOrderDetails(callback, query);
+  }
 
-export function createWallet(callback: (result: any, error: any) => void) {
-  return RnOktoSdk.createWallet(callback);
-}
+  function getRawTransactionStatus(
+    callback: (result: any, error: any) => void,
+    query: RawTransactionStatusQuery
+  ): void {
+    RnOktoSdk.getRawTransactionStatus(callback, query);
+  }
 
-export function transferTokens(
-  data: TransferTokens,
-  callback: (result: any, error: any) => void
-) {
-  return RnOktoSdk.transferTokens(data, callback);
-}
+  function createWallet(callback: (result: any, error: any) => void): void {
+    RnOktoSdk.createWallet(callback);
+  }
 
-export function transferNft(
-  data: TransferNft,
-  callback: (result: any, error: any) => void
-) {
-  return RnOktoSdk.transferNft(data, callback);
-}
+  function transferTokens(
+    data: TransferTokens,
+    callback: (result: any, error: any) => void
+  ): void {
+    RnOktoSdk.transferTokens(data, callback);
+  }
 
-export function executeRawTransaction(
-  data: ExecuteRawTransaction,
-  callback: (result: any, error: any) => void
-) {
-  return RnOktoSdk.executeRawTransaction(data, callback);
-}
+  function transferNft(
+    data: TransferNft,
+    callback: (result: any, error: any) => void
+  ): void {
+    RnOktoSdk.transferNft(data, callback);
+  }
 
-export function setTheme(
-  theme: Partial<Theme>
-) {
-  return RnOktoSdk.setTheme(theme);
-}
+  function executeRawTransaction(
+    data: ExecuteRawTransaction,
+    callback: (result: any, error: any) => void
+  ): void {
+    RnOktoSdk.executeRawTransaction(data, callback);
+  }
 
-export function getTheme() : Theme {
-  return RnOktoSdk.getTheme();
-}
+  function setTheme(theme: Partial<Theme>): void {
+    RnOktoSdk.setTheme(theme);
+  }
+
+  function getTheme(): Theme {
+    return RnOktoSdk.getTheme();
+  }
+
+  useEffect(() => {
+    RnOktoSdk.init(apiKey, buildType);
+  }, [apiKey, buildType]);
+
+  return (
+    <OktoContext.Provider
+      value={{
+        showBottomSheet,
+        closeBottomSheet,
+        authenticate,
+        getPortfolio,
+        getSupportedNetworks,
+        getSupportedTokens,
+        getUserDetails,
+        getWallets,
+        orderHistory,
+        getNftOrderDetails,
+        getRawTransactionStatus,
+        createWallet,
+        transferNft,
+        transferTokens,
+        executeRawTransaction,
+        setTheme,
+        getTheme,
+      }}
+    >
+      {children}
+      <OktoBottomSheet ref={oktoBottomSheetRef} />
+    </OktoContext.Provider>
+  );
+};
+
+export const useOkto = () => useContext(OktoContext);
 
 export * from './types';
-export * from './components/OktoBottomSheetProvider';

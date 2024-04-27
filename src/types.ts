@@ -9,6 +9,47 @@ export enum BottomSheetType {
   PIN = 'PIN'
 }
 
+export interface OktoContextType {
+  showBottomSheet: (screen: BottomSheetType) => void;
+  closeBottomSheet: () => void;
+  authenticate: (
+    idToken: string,
+    callback: (result: any, error: any) => void
+  ) => void;
+  getPortfolio: (callback: (result: any, error: any) => void) => void;
+  getSupportedNetworks: (callback: (result: any, error: any) => void) => void;
+  getSupportedTokens: (callback: (result: any, error: any) => void) => void;
+  getUserDetails: (callback: (result: any, error: any) => void) => void;
+  getWallets: (callback: (result: any, error: any) => void) => void;
+  orderHistory: (
+    callback: (result: any, error: any) => void,
+    query?: Partial<OrderQuery>
+  ) => void;
+  getNftOrderDetails: (
+    callback: (result: any, error: any) => void,
+    query?: Partial<NftOrderDetailsQuery>
+  ) => void;
+  getRawTransactionStatus: (
+    callback: (result: any, error: any) => void,
+    query: RawTransactionStatusQuery
+  ) => void;
+  createWallet: (callback: (result: any, error: any) => void) => void;
+  transferTokens: (
+    data: TransferTokens,
+    callback: (result: any, error: any) => void
+  ) => void;
+  transferNft: (
+    data: TransferNft,
+    callback: (result: any, error: any) => void
+  ) => void;
+  executeRawTransaction: (
+    data: ExecuteRawTransaction,
+    callback: (result: any, error: any) => void
+  ) => void;
+  getTheme: () => Theme;
+  setTheme: (theme: Partial<Theme>) => void;
+}
+
 export interface ApiResponse<T> {
   data: T;
   status: string;

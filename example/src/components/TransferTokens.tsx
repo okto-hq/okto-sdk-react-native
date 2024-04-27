@@ -1,8 +1,9 @@
 import React, { useState } from 'react';
 import { View, Button, TextInput, Text, StyleSheet } from 'react-native';
-import { transferTokens } from 'okto-sdk-react-native';
+import { useOkto, type OktoContextType } from 'okto-sdk-react-native';
 
 function TransferTokens() {
+  const { transferTokens } = useOkto() as OktoContextType;
   const [networkName, setNetworkName] = useState('SOLANA_DEVNET');
   const [tokenAddress, setTokenAddress] = useState('');
   const [quantity, setQuantity] = useState('1');
