@@ -84,7 +84,7 @@ export default function App() {
         <GetButton title="getWallets" apiFn={getWallets} />
         <GetButton title="createWallet" apiFn={createWallet} />
         <GetButton title="orderHistory" apiFn={orderHistory} />
-        <GetButton title="getNftOrderDetails" apiFn={getNftOrderDetails} />
+        <GetButton title="getNftOrderDetails" apiFn={() => getNftOrderDetails({})} />
 
         <View style={styles.padding} />
         <TransferTokens />

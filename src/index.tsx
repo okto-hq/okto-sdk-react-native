@@ -11,13 +11,24 @@ import {
   BottomSheetType,
   BuildType,
   type ExecuteRawTransaction,
+  type ExecuteRawTransactionData,
+  type NetworkData,
+  type NftOrderDetailsData,
   type NftOrderDetailsQuery,
   type OktoContextType,
+  type OrderData,
   type OrderQuery,
+  type PortfolioData,
+  type RawTransactionStatusData,
   type RawTransactionStatusQuery,
   type Theme,
+  type TokensData,
   type TransferNft,
+  type TransferNftData,
   type TransferTokens,
+  type TransferTokensData,
+  type User,
+  type WalletData,
 } from './types';
 
 const OktoContext = createContext<OktoContextType | null>(null);
@@ -52,74 +63,56 @@ export const OktoProvider = ({
     RnOktoSdk.authenticate(idToken, callback);
   }
 
-  function getPortfolio(callback: (result: any, error: any) => void): void {
-    RnOktoSdk.getPortfolio(callback);
+  function getPortfolio(): Promise<PortfolioData> {
+    return RnOktoSdk.getPortfolio();
   }
 
-  function getSupportedNetworks(
-    callback: (result: any, error: any) => void
-  ): void {
-    RnOktoSdk.getSupportedNetworks(callback);
+  function getSupportedNetworks(): Promise<NetworkData> {
+    return RnOktoSdk.getSupportedNetworks();
   }
 
-  function getSupportedTokens(
-    callback: (result: any, error: any) => void
-  ): void {
-    RnOktoSdk.getSupportedTokens(callback);
+  function getSupportedTokens(): Promise<TokensData> {
+    return RnOktoSdk.getSupportedTokens();
   }
 
-  function getUserDetails(callback: (result: any, error: any) => void): void {
-    RnOktoSdk.getUserDetails(callback);
+  function getUserDetails(): Promise<User> {
+    return RnOktoSdk.getUserDetails();
   }
 
-  function getWallets(callback: (result: any, error: any) => void): void {
-    RnOktoSdk.getWallets(callback);
+  function getWallets(): Promise<WalletData> {
+    return RnOktoSdk.getWallets();
   }
 
-  function orderHistory(
-    callback: (result: any, error: any) => void,
-    query: Partial<OrderQuery> = {}
-  ): void {
-    RnOktoSdk.orderHistory(callback, query);
+  function orderHistory(query: Partial<OrderQuery> = {}): Promise<OrderData> {
+    return RnOktoSdk.orderHistory(query);
   }
 
   function getNftOrderDetails(
-    callback: (result: any, error: any) => void,
     query: Partial<NftOrderDetailsQuery> = {}
-  ): void {
-    RnOktoSdk.getNftOrderDetails(callback, query);
+  ): Promise<NftOrderDetailsData> {
+    return RnOktoSdk.getNftOrderDetails(query);
   }
 
   function getRawTransactionStatus(
-    callback: (result: any, error: any) => void,
     query: RawTransactionStatusQuery
-  ): void {
-    RnOktoSdk.getRawTransactionStatus(callback, query);
+  ): Promise<RawTransactionStatusData> {
+    return RnOktoSdk.getRawTransactionStatus(query);
   }
 
-  function createWallet(callback: (result: any, error: any) => void): void {
-    RnOktoSdk.createWallet(callback);
+  function createWallet(): Promise<WalletData> {
+    return RnOktoSdk.createWallet();
   }
 
-  function transferTokens(
-    data: TransferTokens,
-    callback: (result: any, error: any) => void
-  ): void {
-    RnOktoSdk.transferTokens(data, callback);
+  function transferTokens(data: TransferTokens): Promise<TransferTokensData> {
+    return RnOktoSdk.transferTokens(data);
   }
 
-  function transferNft(
-    data: TransferNft,
-    callback: (result: any, error: any) => void
-  ): void {
-    RnOktoSdk.transferNft(data, callback);
+  function transferNft(data: TransferNft): Promise<TransferNftData> {
+    return RnOktoSdk.transferNft(data);
   }
 
-  function executeRawTransaction(
-    data: ExecuteRawTransaction,
-    callback: (result: any, error: any) => void
-  ): void {
-    RnOktoSdk.executeRawTransaction(data, callback);
+  function executeRawTransaction(data: ExecuteRawTransaction): Promise<ExecuteRawTransactionData> {
+    return RnOktoSdk.executeRawTransaction(data);
   }
 
   function setTheme(theme: Partial<Theme>): void {

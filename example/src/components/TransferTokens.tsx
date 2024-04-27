@@ -17,22 +17,18 @@ function TransferTokens() {
       recipientAddress,
       quantity,
     });
-    transferTokens(
-      {
-        network_name: networkName,
-        token_address: tokenAddress,
-        recipient_address: recipientAddress,
-        quantity,
-      },
-      (result: any, error: any) => {
-        if (result) {
-          console.log('Transfer success', result);
-        }
-        if (error) {
-          console.log('Transfer error', error);
-        }
-      }
-    );
+    transferTokens({
+      network_name: networkName,
+      token_address: tokenAddress,
+      recipient_address: recipientAddress,
+      quantity,
+    })
+      .then((result) => {
+        console.log('Transfer success', result);
+      })
+      .catch((error) => {
+        console.log('Transfer error', error);
+      });
   };
 
   return (

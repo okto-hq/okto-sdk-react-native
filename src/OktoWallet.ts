@@ -190,97 +190,75 @@ export class OktoWallet {
 
   async makeGetRequest<T>(
     endpoint: string,
-    callback: Types.Callback<T>,
     queryUrl: string | null = null
-  ): Promise<void> {
+  ): Promise<T> {
     if (!this.axiosInstance) {
-      callback(null, new Error('SDK is not initialized'));
-      return;
+      throw new Error('SDK is not initialized');
     }
 
     const url = queryUrl ? `${endpoint}?${queryUrl}` : endpoint;
     try {
       const response = await this.axiosInstance.get<Types.ApiResponse<T>>(url);
       if (response.data.status === 'success') {
-        callback(response.data.data, null);
+        return response.data.data;
       } else {
-        callback(null, new Error('Server responded with an error'));
+        throw new Error('Server responded with an error');
       }
     } catch (error) {
-      callback(
-        null,
-        error instanceof Error ? error : new Error('Unknown error')
-      );
+      throw error instanceof Error ? error : new Error('Unknown error');
     }
   }
 
-  async getPortfolio(
-    callback: Types.Callback<Types.PortfolioData>
-  ): Promise<void> {
-    this.makeGetRequest<Types.PortfolioData>('/v1/portfolio', callback);
+  async getPortfolio(): Promise<Types.PortfolioData> {
+    return this.makeGetRequest<Types.PortfolioData>('/v1/portfolio');
   }
 
-  async getSupportedTokens(
-    callback: Types.Callback<Types.TokensData>
-  ): Promise<void> {
-    this.makeGetRequest<Types.TokensData>('/v1/supported/tokens', callback);
+  async getSupportedTokens(): Promise<Types.TokensData> {
+    return this.makeGetRequest<Types.TokensData>('/v1/supported/tokens');
   }
 
-  async getSupportedNetworks(
-    callback: Types.Callback<Types.NetworkData>
-  ): Promise<void> {
-    this.makeGetRequest<Types.NetworkData>('/v1/supported/networks', callback);
+  async getSupportedNetworks(): Promise<Types.NetworkData> {
+    return this.makeGetRequest<Types.NetworkData>('/v1/supported/networks');
   }
 
-  async getUserDetails(callback: Types.Callback<Types.User>): Promise<void> {
-    this.makeGetRequest<Types.User>('/v1/user_from_token', callback);
+  async getUserDetails(): Promise<Types.User> {
+    return this.makeGetRequest<Types.User>('/v1/user_from_token');
   }
 
-  async getWallets(callback: Types.Callback<Types.WalletData>): Promise<void> {
-    //#TODO Check if endpoint is correct - /v1/wallet give 503 error
-    this.makeGetRequest<Types.WalletData>('/v1/widget/wallet', callback);
+  async getWallets(): Promise<Types.WalletData> {
+    return this.makeGetRequest<Types.WalletData>('/v1/widget/wallet');
   }
 
   async orderHistory(
-    callback: Types.Callback<Types.OrderData>,
     query: Partial<Types.OrderQuery>
-  ): Promise<void> {
+  ): Promise<Types.OrderData> {
     const queryString = getQueryString(query);
-    this.makeGetRequest<Types.OrderData>('/v1/orders', callback, queryString);
+    return this.makeGetRequest<Types.OrderData>('/v1/orders', queryString);
   }
 
   async getNftOrderDetails(
-    callback: Types.Callback<Types.NftOrderDetailsData>,
     query: Partial<Types.NftOrderDetailsQuery>
-  ): Promise<void> {
+  ): Promise<Types.NftOrderDetailsData> {
     const queryString = getQueryString(query);
-    this.makeGetRequest<Types.NftOrderDetailsData>(
+    return this.makeGetRequest<Types.NftOrderDetailsData>(
       '/v1/nft/order_details',
-      callback,
       queryString
     );
   }
 
   async getRawTransactionStatus(
-    callback: Types.Callback<Types.RawTransactionStatusData>,
     query: Types.RawTransactionStatusQuery
-  ): Promise<void> {
+  ): Promise<Types.RawTransactionStatusData> {
     const queryString = getQueryString(query);
-    this.makeGetRequest<Types.RawTransactionStatusData>(
+    return this.makeGetRequest<Types.RawTransactionStatusData>(
       '/v1/rawtransaction/status',
-      callback,
       queryString
     );
   }
 
-  async makePostRequest<T>(
-    endpoint: string,
-    callback: Types.Callback<T>,
-    data: any = null
-  ): Promise<void> {
+  async makePostRequest<T>(endpoint: string, data: any = null): Promise<T> {
     if (!this.axiosInstance) {
-      callback(null, new Error('SDK is not initialized'));
-      return;
+      throw new Error('SDK is not initialized');
     }
 
     try {
@@ -289,53 +267,40 @@ export class OktoWallet {
         data
       );
       if (response.data.status === 'success') {
-        callback(response.data.data, null);
+        return response.data.data;
       } else {
-        callback(null, new Error('Server responded with an error'));
+        throw new Error('Server responded with an error');
       }
     } catch (error) {
-      callback(
-        null,
-        error instanceof Error ? error : new Error('Unknown error')
-      );
+      throw error instanceof Error ? error : new Error('Unknown error');
     }
   }
 
-  async createWallet(
-    callback: Types.Callback<Types.WalletData>
-  ): Promise<void> {
-    this.makePostRequest<Types.WalletData>('/v1/wallet', callback);
+  async createWallet(): Promise<Types.WalletData> {
+    return this.makePostRequest<Types.WalletData>('/v1/wallet');
   }
 
   async transferTokens(
-    data: Types.TransferTokens,
-    callback: Types.Callback<Types.TransferTokensData>
-  ): Promise<void> {
-    this.makePostRequest<Types.TransferTokensData>(
+    data: Types.TransferTokens
+  ): Promise<Types.TransferTokensData> {
+    return this.makePostRequest<Types.TransferTokensData>(
       '/v1/transfers/tokens/execute',
-      callback,
       data
     );
   }
 
-  async transferNft(
-    data: Types.TransferNft,
-    callback: Types.Callback<Types.TransferNftData>
-  ): Promise<void> {
-    this.makePostRequest<Types.TransferNftData>(
+  async transferNft(data: Types.TransferNft): Promise<Types.TransferNftData> {
+    return this.makePostRequest<Types.TransferNftData>(
       '/v1/nft/transfer',
-      callback,
       data
     );
   }
 
   async executeRawTransaction(
-    data: Types.ExecuteRawTransaction,
-    callback: Types.Callback<Types.ExecuteRawTransactionData>
-  ): Promise<void> {
-    this.makePostRequest<Types.ExecuteRawTransactionData>(
+    data: Types.ExecuteRawTransaction
+  ): Promise<Types.ExecuteRawTransactionData> {
+    return this.makePostRequest<Types.ExecuteRawTransactionData>(
       '/v1/rawtransaction/execute',
-      callback,
       data
     );
   }

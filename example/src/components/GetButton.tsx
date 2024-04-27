@@ -10,23 +10,12 @@ import {
 
 interface GetButtonProps {
   title: string;
-  apiFn: (callback: any) => void;
+  apiFn: () => Promise<any>;
 }
 
 function GetButton({ title, apiFn }: GetButtonProps) {
   const [modalVisible, setModalVisible] = useState(false);
   const [resultData, setResultData] = useState('');
-
-  function callback(result: any, error: any) {
-    if (result) {
-      console.log(`${title}:`, result);
-      setResultData(JSON.stringify(result, null, 2)); // Pretty print the JSON
-      setModalVisible(true);
-    }
-    if (error) {
-      console.error(`${title} error:`, error);
-    }
-  }
 
   return (
     <View style={styles.container}>
@@ -34,7 +23,15 @@ function GetButton({ title, apiFn }: GetButtonProps) {
         <Button
           title={title}
           onPress={() => {
-            apiFn(callback);
+            apiFn()
+              .then((result) => {
+                console.log(`${title}:`, result);
+                setResultData(JSON.stringify(result, null, 2)); // Pretty print the JSON
+                setModalVisible(true);
+              })
+              .catch((error) => {
+                console.error(`${title} error:`, error);
+              });
           }}
         />
       </View>
