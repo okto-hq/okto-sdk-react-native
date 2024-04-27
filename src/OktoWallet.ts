@@ -4,7 +4,6 @@ import { baseUrls, AUTH_DETAILS_KEY, defaultTheme } from './constants';
 import axios, { type AxiosInstance } from 'axios';
 import * as Types from './types';
 import { getQueryString } from './utils/query-helpers';
-// import { getAuthDetailsPrettyString } from './utils/log-helper';
 
 export class OktoWallet {
   private apiKey: string = '';
@@ -84,8 +83,6 @@ export class OktoWallet {
         return Promise.reject(error);
       }
     );
-
-    console.log('init done');
   }
 
   private async refreshToken(): Promise<Types.AuthDetails | null> {
@@ -150,17 +147,19 @@ export class OktoWallet {
         response.data &&
         response.data.status === 'success'
       ) {
-        //TODO check pincode flow
-        const authDetails: Types.AuthDetails = {
-          authToken: response.data.data.auth_token,
-          refreshToken: response.data.data.refresh_auth_token,
-          deviceToken: response.data.data.device_token,
-        };
-        // console.log("Id token: ", idToken)
-        // console.log("Auth token: ", authDetails.authToken)
-        this.updateAuthDetails(authDetails);
+        //check if token in data then open pincode flow
+        if (response.data.data.auth_token) {
+          const authDetails: Types.AuthDetails = {
+            authToken: response.data.data.auth_token,
+            refreshToken: response.data.data.refresh_auth_token,
+            deviceToken: response.data.data.device_token,
+          };
+          this.updateAuthDetails(authDetails);
+        }
+        callback(response.data.data, null);
+      } else {
+        callback(null, new Error('Server responded with an error'));
       }
-      callback(response.data, null);
     } catch (error) {
       callback(null, error);
     }

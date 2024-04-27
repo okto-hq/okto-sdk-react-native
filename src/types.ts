@@ -10,7 +10,8 @@ export enum BottomSheetType {
 }
 
 export interface OktoContextType {
-  showBottomSheet: (screen: BottomSheetType) => void;
+  showPinSheet: (callback: (success: boolean) => void) => void;
+  showWidgetSheet: () => void;
   closeBottomSheet: () => void;
   authenticate: (
     idToken: string,
@@ -31,7 +32,9 @@ export interface OktoContextType {
   createWallet: () => Promise<WalletData>;
   transferTokens: (data: TransferTokens) => Promise<TransferTokensData>;
   transferNft: (data: TransferNft) => Promise<TransferNftData>;
-  executeRawTransaction: (data: ExecuteRawTransaction) => Promise<ExecuteRawTransactionData>;
+  executeRawTransaction: (
+    data: ExecuteRawTransaction
+  ) => Promise<ExecuteRawTransactionData>;
   getTheme: () => Theme;
   setTheme: (theme: Partial<Theme>) => void;
 }

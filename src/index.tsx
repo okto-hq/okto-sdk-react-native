@@ -44,12 +44,23 @@ export const OktoProvider = ({
 }) => {
   const oktoBottomSheetRef = useRef<any>(null);
 
-  const showBottomSheet = (screen: BottomSheetType) => {
+  const showBottomSheet = (
+    screen: BottomSheetType,
+    callback: (success: boolean) => void
+  ) => {
     if (RnOktoSdk.isLoggedIn()) {
-      oktoBottomSheetRef.current?.openSheet(screen);
+      oktoBottomSheetRef.current?.openSheet(screen, callback);
     } else {
       console.error('user not logged in');
     }
+  };
+
+  const showPinSheet = (callback: (success: boolean) => void) => {
+    showBottomSheet(BottomSheetType.PIN, callback);
+  };
+
+  const showWidgetSheet = () => {
+    showBottomSheet(BottomSheetType.WIDGET, () => {});
   };
 
   const closeBottomSheet = () => {
@@ -60,7 +71,25 @@ export const OktoProvider = ({
     idToken: string,
     callback: (result: any, error: any) => void
   ) {
-    RnOktoSdk.authenticate(idToken, callback);
+    RnOktoSdk.authenticate(idToken, (result, error) => {
+      if (result) {
+        if (result.token) {
+          showPinSheet((res: boolean) => {
+            if (res) {
+              callback(true, null);
+              return;
+            }
+          });
+          callback(null, new Error('Pin code not set'));
+        } else {
+          // Normal auth flow
+          callback(true, null);
+        }
+      }
+      if (error) {
+        callback(null, error);
+      }
+    });
   }
 
   function getPortfolio(): Promise<PortfolioData> {
@@ -111,7 +140,9 @@ export const OktoProvider = ({
     return RnOktoSdk.transferNft(data);
   }
 
-  function executeRawTransaction(data: ExecuteRawTransaction): Promise<ExecuteRawTransactionData> {
+  function executeRawTransaction(
+    data: ExecuteRawTransaction
+  ): Promise<ExecuteRawTransactionData> {
     return RnOktoSdk.executeRawTransaction(data);
   }
 
@@ -130,7 +161,8 @@ export const OktoProvider = ({
   return (
     <OktoContext.Provider
       value={{
-        showBottomSheet,
+        showPinSheet,
+        showWidgetSheet,
         closeBottomSheet,
         authenticate,
         getPortfolio,
