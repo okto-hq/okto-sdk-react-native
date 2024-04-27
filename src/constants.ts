@@ -22,3 +22,6 @@ export const defaultTheme: Theme = {
   surfaceColor: '0xFF1F0A2F',
   backgroundColor: '0xFF000000',
 };
+
+export const JOB_RETRY_INTERVAL = 5000; //5s
+export const JOB_MAX_RETRY = 12; //retry for 60s (12 * 5 = 60)

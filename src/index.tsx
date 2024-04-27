@@ -13,12 +13,15 @@ import {
   type ExecuteRawTransaction,
   type ExecuteRawTransactionData,
   type NetworkData,
+  type NftOrderDetails,
   type NftOrderDetailsData,
   type NftOrderDetailsQuery,
   type OktoContextType,
+  type Order,
   type OrderData,
   type OrderQuery,
   type PortfolioData,
+  type RawTransactionStatus,
   type RawTransactionStatusData,
   type RawTransactionStatusQuery,
   type Theme,
@@ -136,14 +139,30 @@ export const OktoProvider = ({
     return RnOktoSdk.transferTokens(data);
   }
 
+  function transferTokensWithJobStatus(data: TransferTokens): Promise<Order> {
+    return RnOktoSdk.transferTokensWithJobStatus(data);
+  }
+
   function transferNft(data: TransferNft): Promise<TransferNftData> {
     return RnOktoSdk.transferNft(data);
+  }
+
+  function transferNftWithJobStatus(
+    data: TransferNft
+  ): Promise<NftOrderDetails> {
+    return RnOktoSdk.transferNftWithJobStatus(data);
   }
 
   function executeRawTransaction(
     data: ExecuteRawTransaction
   ): Promise<ExecuteRawTransactionData> {
     return RnOktoSdk.executeRawTransaction(data);
+  }
+
+  function executeRawTransactionWithJobStatus(
+    data: ExecuteRawTransaction
+  ): Promise<RawTransactionStatus> {
+    return RnOktoSdk.executeRawTransactionWithJobStatus(data);
   }
 
   function setTheme(theme: Partial<Theme>): void {
@@ -175,8 +194,11 @@ export const OktoProvider = ({
         getRawTransactionStatus,
         createWallet,
         transferNft,
+        transferNftWithJobStatus,
         transferTokens,
+        transferTokensWithJobStatus,
         executeRawTransaction,
+        executeRawTransactionWithJobStatus,
         setTheme,
         getTheme,
       }}
