@@ -1,6 +1,6 @@
 import { BuildType } from './types';
 import { storeJSONLocalStorage, getJSONLocalStorage } from './storage';
-import { baseUrls, AUTH_DETAILS_KEY } from './constants';
+import { baseUrls, AUTH_DETAILS_KEY, defaultTheme } from './constants';
 import axios, { type AxiosInstance } from 'axios';
 import * as Types from './types';
 import { getQueryString } from './utils/query-helpers';
@@ -11,6 +11,15 @@ export class OktoWallet {
   private baseUrl: string = '';
   private axiosInstance: AxiosInstance | null = null;
   private authDetails: Types.AuthDetails | null = null;
+  private theme: Types.Theme = defaultTheme;
+
+  isLoggedIn(): boolean {
+    return this.authDetails != null;
+  }
+
+  getAuthToken(): string | undefined {
+    return this.authDetails?.authToken;
+  }
 
   async init(apiKey: string, buildType: BuildType = BuildType.SANDBOX) {
     this.apiKey = apiKey;
@@ -296,4 +305,14 @@ export class OktoWallet {
       data
     );
   }
+
+  setTheme(theme: Partial<Types.Theme>){
+    this.theme = { ...this.theme, ...theme};
+  }
+
+  getTheme(): Types.Theme {
+    return this.theme;
+  }
 }
+
+export const RnOktoSdk = new OktoWallet();

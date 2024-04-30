@@ -1,15 +1,19 @@
-import { OktoWallet } from './OktoWallet';
 import {
   BuildType,
   type ExecuteRawTransaction,
   type NftOrderDetailsQuery,
   type OrderQuery,
   type RawTransactionStatusQuery,
+  type Theme,
   type TransferNft,
   type TransferTokens,
 } from './types';
 
-const RnOktoSdk = new OktoWallet();
+import { RnOktoSdk } from './OktoWallet';
+
+export function isLoggedIn(): boolean {
+  return RnOktoSdk.isLoggedIn();
+}
 
 export function init(apiKey: string, buildType: BuildType = BuildType.SANDBOX) {
   return RnOktoSdk.init(apiKey, buildType);
@@ -92,4 +96,15 @@ export function executeRawTransaction(
   return RnOktoSdk.executeRawTransaction(data, callback);
 }
 
+export function setTheme(
+  theme: Partial<Theme>
+) {
+  return RnOktoSdk.setTheme(theme);
+}
+
+export function getTheme() : Theme {
+  return RnOktoSdk.getTheme();
+}
+
 export * from './types';
+export * from './components/OktoBottomSheetProvider';

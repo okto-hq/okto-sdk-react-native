@@ -12,6 +12,8 @@ Okto.init(OKTO_CLIENT_API, Okto.BuildType.SANDBOX);
 export default function App() {
   const [idToken, setIdToken] = React.useState<string>();
 
+  const { showBottomSheet } = Okto.useOktoBottomSheet() as Okto.SheetContextType;
+
   function handleAuthenticate(result: any, error: any) {
     if (result) {
       console.log('authentication successful');
@@ -29,34 +31,48 @@ export default function App() {
 
   return (
     <SafeAreaView>
-      <ScrollView style={styles.container}>
-        <Text style={styles.title}>Okto SDK TEST App</Text>
-        <View style={styles.buttonGroup}>
-          <SignIn onSignIn={handleSignIn} />
-          <View style={styles.padding} />
-          <Button
-            title="authenticate"
-            onPress={() => {
-              Okto.authenticate(idToken!, handleAuthenticate);
-            }}
+
+        <ScrollView style={styles.container}>
+          <Text style={styles.title}>Okto SDK TEST App</Text>
+          <View style={styles.buttonGroup}>
+            <SignIn onSignIn={handleSignIn} />
+            <View style={styles.padding} />
+            <Button
+              title="authenticate"
+              onPress={() => {
+                Okto.authenticate(idToken!, handleAuthenticate);
+              }}
+            />
+            <View style={styles.padding} />
+            <Button
+              title="openOktoBottomsheet"
+              onPress={() => {
+                showBottomSheet();
+              }}
+            />
+          </View>
+
+          <GetButton title="getPortfolio" apiFn={Okto.getPortfolio} />
+          <GetButton
+            title="getSupportedNetworks"
+            apiFn={Okto.getSupportedNetworks}
           />
-        </View>
+          <GetButton
+            title="getSupportedTokens"
+            apiFn={Okto.getSupportedTokens}
+          />
+          <GetButton title="getUserDetails" apiFn={Okto.getUserDetails} />
+          <GetButton title="getWallets" apiFn={Okto.getWallets} />
+          <GetButton title="createWallet" apiFn={Okto.createWallet} />
+          <GetButton title="orderHistory" apiFn={Okto.orderHistory} />
+          <GetButton
+            title="getNftOrderDetails"
+            apiFn={Okto.getNftOrderDetails}
+          />
 
-        <GetButton title="getPortfolio" apiFn={Okto.getPortfolio} />
-        <GetButton
-          title="getSupportedNetworks"
-          apiFn={Okto.getSupportedNetworks}
-        />
-        <GetButton title="getSupportedTokens" apiFn={Okto.getSupportedTokens} />
-        <GetButton title="getUserDetails" apiFn={Okto.getUserDetails} />
-        <GetButton title="getWallets" apiFn={Okto.getWallets} />
-        <GetButton title="createWallet" apiFn={Okto.createWallet} />
-        <GetButton title="orderHistory" apiFn={Okto.orderHistory} />
-        <GetButton title="getNftOrderDetails" apiFn={Okto.getNftOrderDetails} />
-
-        <View style={styles.padding}/>
-        <TransferTokens />
-      </ScrollView>
+          <View style={styles.padding} />
+          <TransferTokens />
+        </ScrollView>
     </SafeAreaView>
   );
 }

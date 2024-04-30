@@ -165,3 +165,15 @@ export interface ExecuteRawTransaction {
 export interface ExecuteRawTransactionData {
   jobId: string;
 }
+
+export interface Theme {
+  textPrimaryColor: String;
+  textSecondaryColor: String;
+  textTertiaryColor: String;
+  accentColor: String;
+  accent2Color: String;
+  strokBorderColor: String;
+  strokDividerColor: String;
+  surfaceColor: String;
+  backgroundColor: String;
+}
