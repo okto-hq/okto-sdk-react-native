@@ -8,11 +8,7 @@ import {
   SafeAreaView,
   ScrollView,
 } from 'react-native';
-import {
-  useOkto,
-  BottomSheetType,
-  type OktoContextType,
-} from 'okto-sdk-react-native';
+import { useOkto, type OktoContextType } from 'okto-sdk-react-native';
 import SignIn from './SignIn';
 import GetButton from './components/GetButton';
 import TransferTokens from './components/TransferTokens';
@@ -21,7 +17,8 @@ export default function App() {
   const [idToken, setIdToken] = React.useState<string>();
 
   const {
-    showBottomSheet,
+    showPinSheet,
+    showWidgetSheet,
     authenticate,
     getPortfolio,
     getSupportedNetworks,
@@ -65,14 +62,16 @@ export default function App() {
           <Button
             title="openOktoBottomsheet"
             onPress={() => {
-              showBottomSheet(BottomSheetType.WIDGET);
+              showWidgetSheet();
             }}
           />
           <View style={styles.padding} />
           <Button
             title="ShowPinScreen"
             onPress={() => {
-              showBottomSheet(BottomSheetType.PIN);
+              showPinSheet((res: boolean) => {
+                console.log('Pin sheet result: ', res);
+              });
             }}
           />
         </View>
@@ -84,7 +83,10 @@ export default function App() {
         <GetButton title="getWallets" apiFn={getWallets} />
         <GetButton title="createWallet" apiFn={createWallet} />
         <GetButton title="orderHistory" apiFn={orderHistory} />
-        <GetButton title="getNftOrderDetails" apiFn={() => getNftOrderDetails({})} />
+        <GetButton
+          title="getNftOrderDetails"
+          apiFn={() => getNftOrderDetails({})}
+        />
 
         <View style={styles.padding} />
         <TransferTokens />

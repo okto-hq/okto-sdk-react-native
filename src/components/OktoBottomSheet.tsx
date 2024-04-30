@@ -20,9 +20,24 @@ const _OktoBottomSheet = ({}: {}, ref: any) => {
   );
   const [webViewCanGoBack, setWebViewCanGoBack] = useState(false);
   const webViewRef = useRef<any>(null);
+  const pinCallback = useRef<any>(null);
 
-  const openSheet = (screen: BottomSheetType | null) => {
+  const setPinCallback = (callback: any) => {
+    pinCallback.current = callback;
+  };
+
+  const callPinCallback = (res: any) => {
+    if (pinCallback.current) {
+      pinCallback.current(res);
+    }
+  };
+
+  const openSheet = (
+    screen: BottomSheetType | null,
+    callback: (success: boolean) => void
+  ) => {
     setCurrentScreen(screen);
+    setPinCallback(callback);
   };
 
   const closeSheet = () => {
@@ -65,7 +80,10 @@ const _OktoBottomSheet = ({}: {}, ref: any) => {
               webViewRef={webViewRef}
               canGoBack={webViewCanGoBack}
               setCanGoBack={setWebViewCanGoBack}
-              onClose={()=>{closeSheet();}}
+              onResult={(result: boolean) => {
+                callPinCallback(result);
+                closeSheet();
+              }}
             />
           )}
         </View>

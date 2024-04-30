@@ -9,12 +9,12 @@ export function PinScreenWidget({
   webViewRef,
   canGoBack,
   setCanGoBack,
-  onClose,
+  onResult,
 }: {
   webViewRef: any;
   canGoBack: boolean;
   setCanGoBack: (x: boolean) => void;
-  onClose: () => void;
+  onResult: (result: boolean) => void;
 }) {
   function handleNavigationStateChange(navState: any) {
     if (canGoBack !== navState.canGoBack) {
@@ -43,11 +43,10 @@ export function PinScreenWidget({
     // console.log('payload ->', payload.nativeEvent.data);
     try {
       RnOktoSdk.updateAuthFromSetPincode(JSON.parse(payload.nativeEvent.data));
+      onResult(true);
     } catch {
       console.log(payload.nativeEvent.data);
-    }
-    finally {
-      onClose();
+      onResult(false);
     }
   };
 
