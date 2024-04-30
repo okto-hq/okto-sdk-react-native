@@ -4,6 +4,11 @@ export enum BuildType {
   PRODUCTION = 'PRODUCTION',
 }
 
+export enum BottomSheetType {
+  WIDGET = 'WIDGET',
+  PIN = 'PIN'
+}
+
 export interface ApiResponse<T> {
   data: T;
   status: string;

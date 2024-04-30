@@ -6,9 +6,10 @@ import React, {
 } from 'react';
 import { OktoBottomSheet } from './OktoBottomSheet';
 import { RnOktoSdk } from '../OktoWallet';
+import type { BottomSheetType } from '../types';
 
 export interface SheetContextType {
-  showBottomSheet: () => void;
+  showBottomSheet: (screen: BottomSheetType) => void;
   closeBottomSheet: () => void;
 }
 
@@ -21,11 +22,10 @@ export const OktoBottomSheetProvider = ({
 }) => {
   const oktoBottomSheetRef = useRef<any>(null);
 
-  const showBottomSheet = () => {
+  const showBottomSheet = (screen: BottomSheetType) => {
     if (RnOktoSdk.isLoggedIn()) {
-      oktoBottomSheetRef.current?.openSheet();
-    }
-    else {
+      oktoBottomSheetRef.current?.openSheet(screen);
+    } else {
       console.error('user not logged in');
     }
   };
@@ -37,7 +37,7 @@ export const OktoBottomSheetProvider = ({
   return (
     <SheetContext.Provider value={{ showBottomSheet, closeBottomSheet }}>
       {children}
-      <OktoBottomSheet isVisible={false} ref={oktoBottomSheetRef} />
+      <OktoBottomSheet ref={oktoBottomSheetRef} />
     </SheetContext.Provider>
   );
 };

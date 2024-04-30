@@ -31,48 +31,48 @@ export default function App() {
 
   return (
     <SafeAreaView>
-
-        <ScrollView style={styles.container}>
-          <Text style={styles.title}>Okto SDK TEST App</Text>
-          <View style={styles.buttonGroup}>
-            <SignIn onSignIn={handleSignIn} />
-            <View style={styles.padding} />
-            <Button
-              title="authenticate"
-              onPress={() => {
-                Okto.authenticate(idToken!, handleAuthenticate);
-              }}
-            />
-            <View style={styles.padding} />
-            <Button
-              title="openOktoBottomsheet"
-              onPress={() => {
-                showBottomSheet();
-              }}
-            />
-          </View>
-
-          <GetButton title="getPortfolio" apiFn={Okto.getPortfolio} />
-          <GetButton
-            title="getSupportedNetworks"
-            apiFn={Okto.getSupportedNetworks}
-          />
-          <GetButton
-            title="getSupportedTokens"
-            apiFn={Okto.getSupportedTokens}
-          />
-          <GetButton title="getUserDetails" apiFn={Okto.getUserDetails} />
-          <GetButton title="getWallets" apiFn={Okto.getWallets} />
-          <GetButton title="createWallet" apiFn={Okto.createWallet} />
-          <GetButton title="orderHistory" apiFn={Okto.orderHistory} />
-          <GetButton
-            title="getNftOrderDetails"
-            apiFn={Okto.getNftOrderDetails}
-          />
-
+      <ScrollView style={styles.container}>
+        <Text style={styles.title}>Okto SDK TEST App</Text>
+        <View style={styles.buttonGroup}>
+          <SignIn onSignIn={handleSignIn} />
           <View style={styles.padding} />
-          <TransferTokens />
-        </ScrollView>
+          <Button
+            title="authenticate"
+            onPress={() => {
+              Okto.authenticate(idToken!, handleAuthenticate);
+            }}
+          />
+          <View style={styles.padding} />
+          <Button
+            title="openOktoBottomsheet"
+            onPress={() => {
+              showBottomSheet(Okto.BottomSheetType.WIDGET);
+            }}
+          />
+          <View style={styles.padding} />
+          <Button
+            title="ShowPinScreen"
+            onPress={() => {
+              showBottomSheet(Okto.BottomSheetType.PIN);
+            }}
+          />
+        </View>
+
+        <GetButton title="getPortfolio" apiFn={Okto.getPortfolio} />
+        <GetButton
+          title="getSupportedNetworks"
+          apiFn={Okto.getSupportedNetworks}
+        />
+        <GetButton title="getSupportedTokens" apiFn={Okto.getSupportedTokens} />
+        <GetButton title="getUserDetails" apiFn={Okto.getUserDetails} />
+        <GetButton title="getWallets" apiFn={Okto.getWallets} />
+        <GetButton title="createWallet" apiFn={Okto.createWallet} />
+        <GetButton title="orderHistory" apiFn={Okto.orderHistory} />
+        <GetButton title="getNftOrderDetails" apiFn={Okto.getNftOrderDetails} />
+
+        <View style={styles.padding} />
+        <TransferTokens />
+      </ScrollView>
     </SafeAreaView>
   );
 }

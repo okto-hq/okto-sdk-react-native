@@ -12,6 +12,7 @@ export class OktoWallet {
   private axiosInstance: AxiosInstance | null = null;
   private authDetails: Types.AuthDetails | null = null;
   private theme: Types.Theme = defaultTheme;
+  private idToken: string = '';
 
   isLoggedIn(): boolean {
     return this.authDetails != null;
@@ -21,13 +22,25 @@ export class OktoWallet {
     return this.authDetails?.authToken;
   }
 
+  getApiKey(): string {
+    return this.apiKey;
+  }
+
+  getBaseUrl(): string {
+    return this.baseUrl;
+  }
+
+  getIdToken(): string {
+    return this.idToken;
+  }
+
   async init(apiKey: string, buildType: BuildType = BuildType.SANDBOX) {
     this.apiKey = apiKey;
-    this.baseUrl = `${baseUrls[buildType]}/api`;
+    this.baseUrl = baseUrls[buildType];
     this.authDetails = await getJSONLocalStorage(AUTH_DETAILS_KEY);
 
     this.axiosInstance = axios.create({
-      baseURL: this.baseUrl,
+      baseURL: `${this.baseUrl}/api`,
       headers: {
         'Content-Type': 'application/json',
         'x-api-key': this.apiKey,
@@ -79,7 +92,7 @@ export class OktoWallet {
     if (this.authDetails) {
       try {
         const response = await axios.post(
-          `${this.baseUrl}/v1/refresh_token`,
+          `${this.baseUrl}/api/v1/refresh_token`,
           {},
           {
             headers: {
@@ -115,9 +128,11 @@ export class OktoWallet {
       return callback(null, new Error('SDK is not initialized'));
     }
 
+    this.idToken = idToken;
+
     try {
       const response = await axios.post(
-        `${this.baseUrl}/v1/authenticate`,
+        `${this.baseUrl}/api/v1/authenticate`,
         {
           id_token: idToken,
         },
@@ -141,11 +156,30 @@ export class OktoWallet {
           refreshToken: response.data.data.refresh_auth_token,
           deviceToken: response.data.data.device_token,
         };
+        // console.log("Id token: ", idToken)
+        // console.log("Auth token: ", authDetails.authToken)
         this.updateAuthDetails(authDetails);
       }
       callback(response.data, null);
     } catch (error) {
       callback(null, error);
+    }
+  }
+
+  updateAuthFromSetPincode(response: any): void {
+    if (response && response.status === 'success') {
+      try {
+        const authDetails: Types.AuthDetails = {
+          authToken: response.data.auth_token,
+          refreshToken: response.data.refresh_auth_token,
+          deviceToken: response.data.device_token,
+        };
+
+        this.updateAuthDetails(authDetails);
+        console.log('updateAuthFromSetPincode: ', 'success');
+      } catch (error) {
+        throw new Error('Failed to update auth from pincode');
+      }
     }
   }
 
@@ -306,8 +340,8 @@ export class OktoWallet {
     );
   }
 
-  setTheme(theme: Partial<Types.Theme>){
-    this.theme = { ...this.theme, ...theme};
+  setTheme(theme: Partial<Types.Theme>) {
+    this.theme = { ...this.theme, ...theme };
   }
 
   getTheme(): Types.Theme {
