@@ -212,3 +212,4 @@ export const OktoProvider = ({
 export const useOkto = () => useContext(OktoContext);
 
 export * from './types';
+export * from './utils/solana_web3';
