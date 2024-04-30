@@ -14,7 +14,6 @@ export function OktoWebViewWidget({
   canGoBack: boolean;
   setCanGoBack: (x: boolean) => void;
 }) {
-
   function handleNavigationStateChange(navState: any) {
     if (canGoBack !== navState.canGoBack) {
       setCanGoBack(navState.canGoBack);
@@ -22,24 +21,23 @@ export function OktoWebViewWidget({
   }
 
   function getInjecteJs(): string {
-    let injectJs = '';
     const authToken = RnOktoSdk.getAuthToken();
     const theme = RnOktoSdk.getTheme();
 
-    injectJs +=
-      `window.localStorage.setItem('textPrimaryColor', '${theme.textPrimaryColor}');` +
-      `window.localStorage.setItem('textSecondaryColor', '${theme.textSecondaryColor}');` +
-      `window.localStorage.setItem('textTertiaryColor', '${theme.textTertiaryColor}');` +
-      `window.localStorage.setItem('accentColor', '${theme.accentColor}');` +
-      `window.localStorage.setItem('accent2Color', '${theme.accent2Color}');` +
-      `window.localStorage.setItem('strokBorderColor', '${theme.strokBorderColor}');` +
-      `window.localStorage.setItem('strokDividerColor', '${theme.strokDividerColor}');` +
-      `window.localStorage.setItem('surfaceColor', '${theme.surfaceColor}');` +
-      `window.localStorage.setItem('backgroundColor', '${theme.backgroundColor}');`;
+    let injectJs = `
+      window.localStorage.setItem('textPrimaryColor', '${theme.textPrimaryColor}');
+      window.localStorage.setItem('textSecondaryColor', '${theme.textSecondaryColor}');
+      window.localStorage.setItem('textTertiaryColor', '${theme.textTertiaryColor}');
+      window.localStorage.setItem('accentColor', '${theme.accentColor}');
+      window.localStorage.setItem('accent2Color', '${theme.accent2Color}');
+      window.localStorage.setItem('strokBorderColor', '${theme.strokBorderColor}');
+      window.localStorage.setItem('strokDividerColor', '${theme.strokDividerColor}');
+      window.localStorage.setItem('surfaceColor', '${theme.surfaceColor}');
+      window.localStorage.setItem('backgroundColor', '${theme.backgroundColor}');
+    `;
 
     if (authToken) {
-      injectJs +=
-        `window.localStorage.setItem('authToken', '${authToken}');`;
+      injectJs += `window.localStorage.setItem('authToken', '${authToken}');`;
     }
     return injectJs;
   }
@@ -50,9 +48,9 @@ export function OktoWebViewWidget({
       source={{ uri: widgetUrl }}
       style={styles.webView}
       onNavigationStateChange={handleNavigationStateChange}
-      startInLoadingState
-      javaScriptEnabled
-      domStorageEnabled
+      startInLoadingState={true}
+      javaScriptEnabled={true}
+      domStorageEnabled={true}
       injectedJavaScriptBeforeContentLoaded={getInjecteJs()}
       renderLoading={() => <Loading />}
       // webviewDebuggingEnabled
