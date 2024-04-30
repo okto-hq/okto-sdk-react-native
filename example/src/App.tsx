@@ -1,51 +1,112 @@
 import * as React from 'react';
 
-import { StyleSheet, View, Text, Button } from 'react-native';
-import { init, authenticate, BuildType } from 'okto-sdk-react-native';
+import {
+  StyleSheet,
+  View,
+  Text,
+  Button,
+  SafeAreaView,
+  ScrollView,
+} from 'react-native';
+import {
+  useOkto,
+  BottomSheetType,
+  type OktoContextType,
+} from 'okto-sdk-react-native';
 import SignIn from './SignIn';
-
-import { OKTO_CLIENT_API } from '@env';
-
-init(OKTO_CLIENT_API, BuildType.SANDBOX);
+import GetButton from './components/GetButton';
+import TransferTokens from './components/TransferTokens';
 
 export default function App() {
   const [idToken, setIdToken] = React.useState<string>();
 
-  function handleSignIn(idToken: string) {
-    console.log('handleSignIn', idToken);
-    setIdToken(idToken);
+  const {
+    showBottomSheet,
+    authenticate,
+    getPortfolio,
+    getSupportedNetworks,
+    getSupportedTokens,
+    getUserDetails,
+    getWallets,
+    createWallet,
+    orderHistory,
+    getNftOrderDetails,
+  } = useOkto() as OktoContextType;
+
+  function handleAuthenticate(result: any, error: any) {
+    if (result) {
+      console.log('authentication successful');
+    }
+    if (error) {
+      console.error('authentication error:', error);
+    }
+  }
+
+  function handleSignIn(_idToken: string) {
+    console.log('Google signIn: Success');
+    authenticate(_idToken, handleAuthenticate);
+    setIdToken(_idToken);
   }
 
   return (
-    <View style={styles.container}>
-      <Text>Okto SDK TEST App</Text>
-      <SignIn onSignIn={handleSignIn} />
-      <Button
-        title="authenticate"
-        onPress={() => {
-          authenticate(idToken!, (result, error) => {
-            if (result) {
-              console.log('authentication successful');
-            }
-            if (error) {
-              console.error('authentication error', error);
-            }
-          });
-        }}
-      />
-    </View>
+    <SafeAreaView>
+      <ScrollView style={styles.container}>
+        <Text style={styles.title}>Okto SDK TEST App</Text>
+        <View style={styles.buttonGroup}>
+          <SignIn onSignIn={handleSignIn} />
+          <View style={styles.padding} />
+          <Button
+            title="authenticate"
+            onPress={() => {
+              authenticate(idToken!, handleAuthenticate);
+            }}
+          />
+          <View style={styles.padding} />
+          <Button
+            title="openOktoBottomsheet"
+            onPress={() => {
+              showBottomSheet(BottomSheetType.WIDGET);
+            }}
+          />
+          <View style={styles.padding} />
+          <Button
+            title="ShowPinScreen"
+            onPress={() => {
+              showBottomSheet(BottomSheetType.PIN);
+            }}
+          />
+        </View>
+
+        <GetButton title="getPortfolio" apiFn={getPortfolio} />
+        <GetButton title="getSupportedNetworks" apiFn={getSupportedNetworks} />
+        <GetButton title="getSupportedTokens" apiFn={getSupportedTokens} />
+        <GetButton title="getUserDetails" apiFn={getUserDetails} />
+        <GetButton title="getWallets" apiFn={getWallets} />
+        <GetButton title="createWallet" apiFn={createWallet} />
+        <GetButton title="orderHistory" apiFn={orderHistory} />
+        <GetButton title="getNftOrderDetails" apiFn={() => getNftOrderDetails({})} />
+
+        <View style={styles.padding} />
+        <TransferTokens />
+      </ScrollView>
+    </SafeAreaView>
   );
 }
 
 const styles = StyleSheet.create({
   container: {
-    flex: 1,
-    alignItems: 'center',
-    justifyContent: 'center',
+    padding: 10,
   },
-  box: {
-    width: 60,
-    height: 60,
+  title: {
+    fontSize: 20,
+    fontWeight: 'bold',
     marginVertical: 20,
+  },
+  buttonGroup: {
+    marginBottom: 20,
+    justifyContent: 'space-around',
+  },
+  padding: {
+    padding: 5,
   },
 });
