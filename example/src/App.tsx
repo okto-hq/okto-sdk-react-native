@@ -1,18 +1,38 @@
 import * as React from 'react';
 
-import { StyleSheet, View, Text } from 'react-native';
-import { multiply } from 'okto-sdk-react-native';
+import { StyleSheet, View, Text, Button } from 'react-native';
+import { init, authenticate, BuildType } from 'okto-sdk-react-native';
+import SignIn from './SignIn';
+
+import { OKTO_CLIENT_API } from '@env';
+
+init(OKTO_CLIENT_API, BuildType.SANDBOX);
 
 export default function App() {
-  const [result, setResult] = React.useState<number | undefined>();
+  const [idToken, setIdToken] = React.useState<string>();
 
-  React.useEffect(() => {
-    multiply(3, 7).then(setResult);
-  }, []);
+  function handleSignIn(idToken: string) {
+    console.log('handleSignIn', idToken);
+    setIdToken(idToken);
+  }
 
   return (
     <View style={styles.container}>
-      <Text>Result: {result}</Text>
+      <Text>Okto SDK TEST App</Text>
+      <SignIn onSignIn={handleSignIn} />
+      <Button
+        title="authenticate"
+        onPress={() => {
+          authenticate(idToken!, (result, error) => {
+            if (result) {
+              console.log('authentication successful');
+            }
+            if (error) {
+              console.error('authentication error', error);
+            }
+          });
+        }}
+      />
     </View>
   );
 }
