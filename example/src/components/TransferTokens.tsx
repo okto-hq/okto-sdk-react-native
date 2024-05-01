@@ -3,10 +3,11 @@ import { View, Button, TextInput, Text, StyleSheet } from 'react-native';
 import { useOkto, type OktoContextType } from 'okto-sdk-react-native';
 
 function TransferTokens() {
-  const { transferTokens } = useOkto() as OktoContextType;
+  const { transferTokensWithJobStatus } =
+    useOkto() as OktoContextType;
   const [networkName, setNetworkName] = useState('SOLANA_DEVNET');
   const [tokenAddress, setTokenAddress] = useState('');
-  const [quantity, setQuantity] = useState('1');
+  const [quantity, setQuantity] = useState('0.1');
   const [recipientAddress, setRecipientAddress] = useState(
     'Eeaq9tfNzk2f8ijdiHNZpjsBV96agB2F3bNmwx6fdVr6'
   );
@@ -17,7 +18,7 @@ function TransferTokens() {
       recipientAddress,
       quantity,
     });
-    transferTokens({
+    transferTokensWithJobStatus({
       network_name: networkName,
       token_address: tokenAddress,
       recipient_address: recipientAddress,

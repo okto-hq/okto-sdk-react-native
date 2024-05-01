@@ -9,6 +9,12 @@ export enum BottomSheetType {
   PIN = 'PIN',
 }
 
+export enum OrderStatus {
+  SUCCESS = 'SUCCESS',
+  FAILED = 'FAILED',
+  PENDING = 'PENDING',
+}
+
 export interface OktoContextType {
   showPinSheet: (callback: (success: boolean) => void) => void;
   showWidgetSheet: () => void;
@@ -31,10 +37,15 @@ export interface OktoContextType {
   ): Promise<RawTransactionStatusData>;
   createWallet: () => Promise<WalletData>;
   transferTokens: (data: TransferTokens) => Promise<TransferTokensData>;
+  transferTokensWithJobStatus: (data: TransferTokens) => Promise<Order>;
   transferNft: (data: TransferNft) => Promise<TransferNftData>;
+  transferNftWithJobStatus(data: TransferNft): Promise<NftOrderDetails>;
   executeRawTransaction: (
     data: ExecuteRawTransaction
   ) => Promise<ExecuteRawTransactionData>;
+  executeRawTransactionWithJobStatus(
+    data: ExecuteRawTransaction
+  ): Promise<RawTransactionStatus>;
   getTheme: () => Theme;
   setTheme: (theme: Partial<Theme>) => void;
 }

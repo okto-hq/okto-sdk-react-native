@@ -1,6 +1,12 @@
 import { BuildType } from './types';
 import { storeJSONLocalStorage, getJSONLocalStorage } from './storage';
-import { baseUrls, AUTH_DETAILS_KEY, defaultTheme } from './constants';
+import {
+  baseUrls,
+  AUTH_DETAILS_KEY,
+  defaultTheme,
+  JOB_MAX_RETRY,
+  JOB_RETRY_INTERVAL,
+} from './constants';
 import axios, { type AxiosInstance } from 'axios';
 import * as Types from './types';
 import { getQueryString } from './utils/query-helpers';
@@ -283,9 +289,41 @@ export class OktoWallet {
     data: Types.TransferTokens
   ): Promise<Types.TransferTokensData> {
     return this.makePostRequest<Types.TransferTokensData>(
-      '/v1/transfers/tokens/execute',
+      '/v1/transfer/tokens/execute',
       data
     );
+  }
+
+  async transferTokensWithJobStatus(
+    data: Types.TransferTokens
+  ): Promise<Types.Order> {
+    try {
+      const { orderId } = await this.transferTokens(data);
+      console.log('Transfer tokens order ID', orderId);
+
+      return await this.waitForJobCompletion<Types.Order>(
+        orderId,
+        async (_orderId: string) => {
+          const orderData = await this.orderHistory({ order_id: _orderId });
+          const order = orderData.jobs.find(
+            (item) => item.order_id === _orderId
+          );
+          if (
+            order &&
+            (order.status === Types.OrderStatus.SUCCESS ||
+              order.status === Types.OrderStatus.FAILED)
+          ) {
+            console.log('Found order: ', order);
+            return order;
+          }
+          throw new Error(
+            `Order with ID ${_orderId} not found or not completed.`
+          );
+        }
+      );
+    } catch (error) {
+      throw error instanceof Error ? error : new Error('Unknown error');
+    }
   }
 
   async transferNft(data: Types.TransferNft): Promise<Types.TransferNftData> {
@@ -295,6 +333,34 @@ export class OktoWallet {
     );
   }
 
+  async transferNftWithJobStatus(
+    data: Types.TransferNft
+  ): Promise<Types.NftOrderDetails> {
+    try {
+      const { order_id } = await this.transferNft(data);
+      console.log('Transfer nfts order ID', order_id);
+
+      return await this.waitForJobCompletion<Types.NftOrderDetails>(
+        order_id,
+        async (orderId: string) => {
+          const orderData = await this.getNftOrderDetails({
+            order_id: orderId,
+          });
+          const order = orderData.nfts.find((item) => item.id === orderId);
+          if (order) {
+            console.log('Found order: ', order);
+            return order;
+          }
+          throw new Error(
+            `Order with ID ${orderId} not found or not completed.`
+          );
+        }
+      );
+    } catch (error) {
+      throw error instanceof Error ? error : new Error('Unknown error');
+    }
+  }
+
   async executeRawTransaction(
     data: Types.ExecuteRawTransaction
   ): Promise<Types.ExecuteRawTransactionData> {
@@ -302,6 +368,61 @@ export class OktoWallet {
       '/v1/rawtransaction/execute',
       data
     );
+  }
+
+  async executeRawTransactionWithJobStatus(
+    data: Types.ExecuteRawTransaction
+  ): Promise<Types.RawTransactionStatus> {
+    try {
+      const { jobId } = await this.executeRawTransaction(data);
+      console.log('Execute Raw transaction called with Job ID', jobId);
+
+      return await this.waitForJobCompletion<Types.RawTransactionStatus>(
+        jobId,
+        async (orderId: string) => {
+          const orderData = await this.getRawTransactionStatus({
+            order_id: orderId,
+          });
+          const order = orderData.jobs.find(
+            (item) => item.order_id === orderId
+          );
+          if (
+            order &&
+            (order.status === Types.OrderStatus.SUCCESS ||
+              order.status === Types.OrderStatus.FAILED)
+          ) {
+            console.log('Found order: ', order);
+            return order;
+          }
+          throw new Error(
+            `Order with ID ${orderId} not found or not completed.`
+          );
+        }
+      );
+    } catch (error) {
+      throw error instanceof Error ? error : new Error('Unknown error');
+    }
+  }
+
+  async waitForJobCompletion<T>(
+    orderId: string,
+    findJobCallback: (orderId: string) => Promise<T>
+  ): Promise<T> {
+    for (let retryCount = 0; retryCount < JOB_MAX_RETRY; retryCount++) {
+      try {
+        return await findJobCallback(orderId);
+      } catch (error) {
+        console.log('Waiting for order completion:', error);
+      }
+      await this.delay(JOB_RETRY_INTERVAL);
+    }
+    throw new Error(
+      `Order with ID ${orderId} not found or not completed after ${JOB_MAX_RETRY * (JOB_RETRY_INTERVAL / 1000)} seconds. Returning failure.`
+    );
+  }
+
+  private delay(ms: number) {
+    return new Promise((resolve) => setTimeout(resolve, ms));
   }
 
   setTheme(theme: Partial<Types.Theme>) {
