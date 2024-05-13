@@ -8,7 +8,7 @@ export function solanaTransaction(
   return {
     network_name,
     transaction: {
-      instructions: JSON.stringify(transaction.instructions),
+      instructions: transaction.instructions,
       signers: signers,
     },
   };
