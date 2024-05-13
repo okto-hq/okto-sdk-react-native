@@ -85,7 +85,6 @@ export class OktoWallet {
           }
         }
         // Return the Promise rejection if refresh didn't work or error is not due to 401
-        this.updateAuthDetails(null);
         return Promise.reject(error);
       }
     );
