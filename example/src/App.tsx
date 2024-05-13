@@ -12,6 +12,7 @@ import { useOkto, type OktoContextType } from 'okto-sdk-react-native';
 import SignIn from './SignIn';
 import GetButton from './components/GetButton';
 import TransferTokens from './components/TransferTokens';
+import { ExecuteRawTransaction } from './components/ExecuteRawTransaction';
 
 export default function App() {
   const [idToken, setIdToken] = React.useState<string>();
@@ -90,6 +91,7 @@ export default function App() {
 
         <View style={styles.padding} />
         <TransferTokens />
+        <ExecuteRawTransaction />
       </ScrollView>
     </SafeAreaView>
   );
