@@ -153,7 +153,6 @@ export class OktoWallet {
         response.data &&
         response.data.status === 'success'
       ) {
-        //check if token in data then open pincode flow
         if (response.data.data.auth_token) {
           const authDetails: Types.AuthDetails = {
             authToken: response.data.data.auth_token,
@@ -161,30 +160,15 @@ export class OktoWallet {
             deviceToken: response.data.data.device_token,
           };
           this.updateAuthDetails(authDetails);
+          callback(response.data.data, null);
+        } else {
+          callback(response.data.data, new Error('No auth token found'));
         }
-        callback(response.data.data, null);
       } else {
         callback(null, new Error('Server responded with an error'));
       }
     } catch (error) {
       callback(null, error);
-    }
-  }
-
-  updateAuthFromSetPincode(response: any): void {
-    if (response && response.status === 'success') {
-      try {
-        const authDetails: Types.AuthDetails = {
-          authToken: response.data.auth_token,
-          refreshToken: response.data.refresh_auth_token,
-          deviceToken: response.data.device_token,
-        };
-
-        this.updateAuthDetails(authDetails);
-        console.log('updateAuthFromSetPincode: ', 'success');
-      } catch (error) {
-        throw new Error('Failed to update auth from pincode');
-      }
     }
   }
 

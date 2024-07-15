@@ -7,7 +7,6 @@ export const baseUrls = {
 };
 
 export const widgetUrl = 'https://3p.okto.tech/';
-export const pinScreenUrl = '';
 
 export const AUTH_DETAILS_KEY = 'AUTH_DETAILS';
 

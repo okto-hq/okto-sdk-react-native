@@ -17,7 +17,6 @@ export default function App() {
   const [idToken, setIdToken] = React.useState<string>();
 
   const {
-    showPinSheet,
     showWidgetSheet,
     authenticate,
     getPortfolio,
@@ -63,15 +62,6 @@ export default function App() {
             title="openOktoBottomsheet"
             onPress={() => {
               showWidgetSheet();
-            }}
-          />
-          <View style={styles.padding} />
-          <Button
-            title="ShowPinScreen"
-            onPress={() => {
-              showPinSheet((res: boolean) => {
-                console.log('Pin sheet result: ', res);
-              });
             }}
           />
         </View>

@@ -4,11 +4,6 @@ export enum BuildType {
   PRODUCTION = 'PRODUCTION',
 }
 
-export enum BottomSheetType {
-  WIDGET = 'WIDGET',
-  PIN = 'PIN',
-}
-
 export enum OrderStatus {
   SUCCESS = 'SUCCESS',
   FAILED = 'FAILED',
@@ -16,7 +11,6 @@ export enum OrderStatus {
 }
 
 export interface OktoContextType {
-  showPinSheet: (callback: (success: boolean) => void) => void;
   showWidgetSheet: () => void;
   closeBottomSheet: () => void;
   authenticate: (
