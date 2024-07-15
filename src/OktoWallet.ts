@@ -116,7 +116,6 @@ export class OktoWallet {
         };
 
         this.updateAuthDetails(authDetails);
-        console.log('Refresh token: ', 'success');
         return authDetails;
       } catch (error) {
         throw new Error('Failed to refresh token');
@@ -334,7 +333,6 @@ export class OktoWallet {
   ): Promise<Types.Order> {
     try {
       const { orderId } = await this.transferTokens(data);
-      console.log('Transfer tokens order ID', orderId);
 
       return await this.waitForJobCompletion<Types.Order>(
         orderId,
@@ -348,7 +346,6 @@ export class OktoWallet {
             (order.status === Types.OrderStatus.SUCCESS ||
               order.status === Types.OrderStatus.FAILED)
           ) {
-            console.log('Found order: ', order);
             return order;
           }
           throw new Error(
@@ -373,7 +370,6 @@ export class OktoWallet {
   ): Promise<Types.NftOrderDetails> {
     try {
       const { order_id } = await this.transferNft(data);
-      console.log('Transfer nfts order ID', order_id);
 
       return await this.waitForJobCompletion<Types.NftOrderDetails>(
         order_id,
@@ -383,7 +379,6 @@ export class OktoWallet {
           });
           const order = orderData.nfts.find((item) => item.id === orderId);
           if (order) {
-            console.log('Found order: ', order);
             return order;
           }
           throw new Error(
@@ -410,7 +405,6 @@ export class OktoWallet {
   ): Promise<Types.RawTransactionStatus> {
     try {
       const { jobId } = await this.executeRawTransaction(data);
-      console.log('Execute Raw transaction called with Job ID', jobId);
 
       return await this.waitForJobCompletion<Types.RawTransactionStatus>(
         jobId,
@@ -426,7 +420,6 @@ export class OktoWallet {
             (order.status === Types.OrderStatus.SUCCESS ||
               order.status === Types.OrderStatus.FAILED)
           ) {
-            console.log('Found order: ', order);
             return order;
           }
           throw new Error(
@@ -446,9 +439,7 @@ export class OktoWallet {
     for (let retryCount = 0; retryCount < JOB_MAX_RETRY; retryCount++) {
       try {
         return await findJobCallback(orderId);
-      } catch (error) {
-        console.log('Waiting for order completion:', error);
-      }
+      } catch (error) {}
       await this.delay(JOB_RETRY_INTERVAL);
     }
     throw new Error(
