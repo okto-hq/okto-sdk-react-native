@@ -60,9 +60,21 @@ export const OktoProvider = ({
 
   function authenticate(
     idToken: string,
-    callback: (result: any, error: any) => void
+    callback: (result: boolean, error: Error | null) => void
   ) {
     RnOktoSdk.authenticate(idToken, callback);
+  }
+
+  function authenticateWithUserId(
+    userId: string,
+    jwtToken: string,
+    callback: (result: boolean, error: Error | null) => void
+  ) {
+    RnOktoSdk.authenticateWithUserId(userId, jwtToken, callback);
+  }
+
+  async function logOut() {
+    await RnOktoSdk.logOut();
   }
 
   function getPortfolio(): Promise<PortfolioData> {
@@ -153,6 +165,8 @@ export const OktoProvider = ({
         showWidgetSheet,
         closeBottomSheet,
         authenticate,
+        authenticateWithUserId,
+        logOut,
         getPortfolio,
         getSupportedNetworks,
         getSupportedTokens,

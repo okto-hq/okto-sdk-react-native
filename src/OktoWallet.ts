@@ -125,10 +125,10 @@ export class OktoWallet {
 
   async authenticate(
     idToken: string,
-    callback: (result: any, error: any) => void
+    callback: (result: boolean, error: Error | null) => void
   ) {
     if (!this.axiosInstance) {
-      return callback(null, new Error('SDK is not initialized'));
+      return callback(false, new Error('SDK is not initialized'));
     }
 
     this.idToken = idToken;
@@ -165,11 +165,60 @@ export class OktoWallet {
           callback(response.data.data, new Error('No auth token found'));
         }
       } else {
-        callback(null, new Error('Server responded with an error'));
+        callback(false, new Error('Server responded with an error'));
       }
-    } catch (error) {
-      callback(null, error);
+    } catch (error: any) {
+      callback(false, error);
     }
+  }
+
+  async authenticateWithUserId(
+    userId: string,
+    jwtToken: string,
+    callback: (result: boolean, error: Error | null) => void
+  ) {
+    if (!this.axiosInstance) {
+      return callback(false, new Error('SDK is not initialized'));
+    }
+
+    try {
+      const response = await axios.post(
+        `${this.baseUrl}/api/v1/jwt-authenticate`,
+        {
+          user_id: userId,
+          auth_token: jwtToken,
+        },
+        {
+          headers: {
+            'Accept': '*/*',
+            'x-api-key': this.apiKey,
+            'Content-Type': 'application/json',
+          },
+        }
+      );
+
+      if (
+        response.status === 200 &&
+        response.data &&
+        response.data.status === 'success'
+      ) {
+        const authDetailsNew: Types.AuthDetails = {
+          authToken: response.data.data.auth_token,
+          refreshToken: response.data.data.refresh_auth_token,
+          deviceToken: response.data.data.device_token,
+        };
+        this.updateAuthDetails(authDetailsNew);
+        callback(response.data.data, null);
+      } else {
+        callback(false, new Error('Server responded with an error'));
+      }
+    } catch (error: any) {
+      callback(false, error);
+    }
+  }
+
+  async logOut() {
+    await this.updateAuthDetails(null);
   }
 
   async updateAuthDetails(authDetails: Types.AuthDetails | null) {
