@@ -18,6 +18,7 @@ export class OktoWallet {
   private authDetails: Types.AuthDetails | null = null;
   private theme: Types.Theme = defaultTheme;
   private idToken: string = '';
+  private buildType: BuildType = BuildType.SANDBOX;
 
   isLoggedIn(): boolean {
     return this.authDetails != null;
@@ -41,6 +42,7 @@ export class OktoWallet {
 
   async init(apiKey: string, buildType: BuildType = BuildType.SANDBOX) {
     this.apiKey = apiKey;
+    this.buildType = buildType;
     this.baseUrl = baseUrls[buildType];
     this.authDetails = await getJSONLocalStorage(AUTH_DETAILS_KEY);
 
@@ -464,6 +466,10 @@ export class OktoWallet {
 
   getTheme(): Types.Theme {
     return this.theme;
+  }
+
+  getBuildType(): BuildType {
+    return this.buildType;
   }
 }
 
