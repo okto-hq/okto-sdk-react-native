@@ -8,7 +8,6 @@ import React, {
 import { OktoBottomSheet } from './components/OktoBottomSheet';
 import { RnOktoSdk } from './OktoWallet';
 import {
-  BottomSheetType,
   BuildType,
   type ExecuteRawTransaction,
   type ExecuteRawTransactionData,
@@ -47,23 +46,12 @@ export const OktoProvider = ({
 }) => {
   const oktoBottomSheetRef = useRef<any>(null);
 
-  const showBottomSheet = (
-    screen: BottomSheetType,
-    callback: (success: boolean) => void
-  ) => {
+  const showWidgetSheet = () => {
     if (RnOktoSdk.isLoggedIn()) {
-      oktoBottomSheetRef.current?.openSheet(screen, callback);
+      oktoBottomSheetRef.current?.openSheet();
     } else {
       console.error('user not logged in');
     }
-  };
-
-  const showPinSheet = (callback: (success: boolean) => void) => {
-    showBottomSheet(BottomSheetType.PIN, callback);
-  };
-
-  const showWidgetSheet = () => {
-    showBottomSheet(BottomSheetType.WIDGET, () => {});
   };
 
   const closeBottomSheet = () => {
@@ -72,27 +60,21 @@ export const OktoProvider = ({
 
   function authenticate(
     idToken: string,
-    callback: (result: any, error: any) => void
+    callback: (result: boolean, error: Error | null) => void
   ) {
-    RnOktoSdk.authenticate(idToken, (result, error) => {
-      if (result) {
-        if (result.token) {
-          showPinSheet((res: boolean) => {
-            if (res) {
-              callback(true, null);
-              return;
-            }
-          });
-          callback(null, new Error('Pin code not set'));
-        } else {
-          // Normal auth flow
-          callback(true, null);
-        }
-      }
-      if (error) {
-        callback(null, error);
-      }
-    });
+    RnOktoSdk.authenticate(idToken, callback);
+  }
+
+  function authenticateWithUserId(
+    userId: string,
+    jwtToken: string,
+    callback: (result: boolean, error: Error | null) => void
+  ) {
+    RnOktoSdk.authenticateWithUserId(userId, jwtToken, callback);
+  }
+
+  async function logOut() {
+    await RnOktoSdk.logOut();
   }
 
   function getPortfolio(): Promise<PortfolioData> {
@@ -180,10 +162,11 @@ export const OktoProvider = ({
   return (
     <OktoContext.Provider
       value={{
-        showPinSheet,
         showWidgetSheet,
         closeBottomSheet,
         authenticate,
+        authenticateWithUserId,
+        logOut,
         getPortfolio,
         getSupportedNetworks,
         getSupportedTokens,

@@ -25,8 +25,10 @@ export function OktoWebViewWidget({
     let injectJs = '';
     const authToken = RnOktoSdk.getAuthToken();
     const theme = RnOktoSdk.getTheme();
+    const buildType = RnOktoSdk.getBuildType();
 
     injectJs +=
+      `window.localStorage.setItem('ENVIRONMENT', '${buildType}');` +
       `window.localStorage.setItem('textPrimaryColor', '${theme.textPrimaryColor}');` +
       `window.localStorage.setItem('textSecondaryColor', '${theme.textSecondaryColor}');` +
       `window.localStorage.setItem('textTertiaryColor', '${theme.textTertiaryColor}');` +

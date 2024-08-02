@@ -18,6 +18,7 @@ export class OktoWallet {
   private authDetails: Types.AuthDetails | null = null;
   private theme: Types.Theme = defaultTheme;
   private idToken: string = '';
+  private buildType: BuildType = BuildType.SANDBOX;
 
   isLoggedIn(): boolean {
     return this.authDetails != null;
@@ -41,6 +42,7 @@ export class OktoWallet {
 
   async init(apiKey: string, buildType: BuildType = BuildType.SANDBOX) {
     this.apiKey = apiKey;
+    this.buildType = buildType;
     this.baseUrl = baseUrls[buildType];
     this.authDetails = await getJSONLocalStorage(AUTH_DETAILS_KEY);
 
@@ -114,7 +116,6 @@ export class OktoWallet {
         };
 
         this.updateAuthDetails(authDetails);
-        console.log('Refresh token: ', 'success');
         return authDetails;
       } catch (error) {
         throw new Error('Failed to refresh token');
@@ -125,10 +126,10 @@ export class OktoWallet {
 
   async authenticate(
     idToken: string,
-    callback: (result: any, error: any) => void
+    callback: (result: boolean, error: Error | null) => void
   ) {
     if (!this.axiosInstance) {
-      return callback(null, new Error('SDK is not initialized'));
+      return callback(false, new Error('SDK is not initialized'));
     }
 
     this.idToken = idToken;
@@ -153,7 +154,6 @@ export class OktoWallet {
         response.data &&
         response.data.status === 'success'
       ) {
-        //check if token in data then open pincode flow
         if (response.data.data.auth_token) {
           const authDetails: Types.AuthDetails = {
             authToken: response.data.data.auth_token,
@@ -161,31 +161,65 @@ export class OktoWallet {
             deviceToken: response.data.data.device_token,
           };
           this.updateAuthDetails(authDetails);
+          callback(response.data.data, null);
+        } else {
+          callback(response.data.data, new Error('No auth token found'));
         }
-        callback(response.data.data, null);
       } else {
-        callback(null, new Error('Server responded with an error'));
+        callback(false, new Error('Server responded with an error'));
       }
-    } catch (error) {
-      callback(null, error);
+    } catch (error: any) {
+      callback(false, error);
     }
   }
 
-  updateAuthFromSetPincode(response: any): void {
-    if (response && response.status === 'success') {
-      try {
-        const authDetails: Types.AuthDetails = {
-          authToken: response.data.auth_token,
-          refreshToken: response.data.refresh_auth_token,
-          deviceToken: response.data.device_token,
-        };
-
-        this.updateAuthDetails(authDetails);
-        console.log('updateAuthFromSetPincode: ', 'success');
-      } catch (error) {
-        throw new Error('Failed to update auth from pincode');
-      }
+  async authenticateWithUserId(
+    userId: string,
+    jwtToken: string,
+    callback: (result: boolean, error: Error | null) => void
+  ) {
+    if (!this.axiosInstance) {
+      return callback(false, new Error('SDK is not initialized'));
     }
+
+    try {
+      const response = await axios.post(
+        `${this.baseUrl}/api/v1/jwt-authenticate`,
+        {
+          user_id: userId,
+          auth_token: jwtToken,
+        },
+        {
+          headers: {
+            'Accept': '*/*',
+            'x-api-key': this.apiKey,
+            'Content-Type': 'application/json',
+          },
+        }
+      );
+
+      if (
+        response.status === 200 &&
+        response.data &&
+        response.data.status === 'success'
+      ) {
+        const authDetailsNew: Types.AuthDetails = {
+          authToken: response.data.data.auth_token,
+          refreshToken: response.data.data.refresh_auth_token,
+          deviceToken: response.data.data.device_token,
+        };
+        this.updateAuthDetails(authDetailsNew);
+        callback(response.data.data, null);
+      } else {
+        callback(false, new Error('Server responded with an error'));
+      }
+    } catch (error: any) {
+      callback(false, error);
+    }
+  }
+
+  async logOut() {
+    await this.updateAuthDetails(null);
   }
 
   async updateAuthDetails(authDetails: Types.AuthDetails | null) {
@@ -299,7 +333,6 @@ export class OktoWallet {
   ): Promise<Types.Order> {
     try {
       const { orderId } = await this.transferTokens(data);
-      console.log('Transfer tokens order ID', orderId);
 
       return await this.waitForJobCompletion<Types.Order>(
         orderId,
@@ -313,7 +346,6 @@ export class OktoWallet {
             (order.status === Types.OrderStatus.SUCCESS ||
               order.status === Types.OrderStatus.FAILED)
           ) {
-            console.log('Found order: ', order);
             return order;
           }
           throw new Error(
@@ -338,7 +370,6 @@ export class OktoWallet {
   ): Promise<Types.NftOrderDetails> {
     try {
       const { order_id } = await this.transferNft(data);
-      console.log('Transfer nfts order ID', order_id);
 
       return await this.waitForJobCompletion<Types.NftOrderDetails>(
         order_id,
@@ -348,7 +379,6 @@ export class OktoWallet {
           });
           const order = orderData.nfts.find((item) => item.id === orderId);
           if (order) {
-            console.log('Found order: ', order);
             return order;
           }
           throw new Error(
@@ -375,7 +405,6 @@ export class OktoWallet {
   ): Promise<Types.RawTransactionStatus> {
     try {
       const { jobId } = await this.executeRawTransaction(data);
-      console.log('Execute Raw transaction called with Job ID', jobId);
 
       return await this.waitForJobCompletion<Types.RawTransactionStatus>(
         jobId,
@@ -391,7 +420,6 @@ export class OktoWallet {
             (order.status === Types.OrderStatus.SUCCESS ||
               order.status === Types.OrderStatus.FAILED)
           ) {
-            console.log('Found order: ', order);
             return order;
           }
           throw new Error(
@@ -411,9 +439,7 @@ export class OktoWallet {
     for (let retryCount = 0; retryCount < JOB_MAX_RETRY; retryCount++) {
       try {
         return await findJobCallback(orderId);
-      } catch (error) {
-        console.log('Waiting for order completion:', error);
-      }
+      } catch (error) {}
       await this.delay(JOB_RETRY_INTERVAL);
     }
     throw new Error(
@@ -431,6 +457,10 @@ export class OktoWallet {
 
   getTheme(): Types.Theme {
     return this.theme;
+  }
+
+  getBuildType(): BuildType {
+    return this.buildType;
   }
 }
 

@@ -4,11 +4,6 @@ export enum BuildType {
   PRODUCTION = 'PRODUCTION',
 }
 
-export enum BottomSheetType {
-  WIDGET = 'WIDGET',
-  PIN = 'PIN',
-}
-
 export enum OrderStatus {
   SUCCESS = 'SUCCESS',
   FAILED = 'FAILED',
@@ -16,13 +11,18 @@ export enum OrderStatus {
 }
 
 export interface OktoContextType {
-  showPinSheet: (callback: (success: boolean) => void) => void;
   showWidgetSheet: () => void;
   closeBottomSheet: () => void;
   authenticate: (
     idToken: string,
-    callback: (result: any, error: any) => void
+    callback: (result: boolean, error: Error | null) => void
   ) => void;
+  authenticateWithUserId: (
+    userId: string,
+    jwtToken: string,
+    callback: (result: boolean, error: Error | null) => void
+  ) => void;
+  logOut: () => void;
   getPortfolio(): Promise<PortfolioData>;
   getSupportedNetworks: () => Promise<NetworkData>;
   getSupportedTokens: () => Promise<TokensData>;
