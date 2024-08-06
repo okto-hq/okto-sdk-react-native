@@ -1,14 +1,14 @@
-import { BuildType } from './types';
-import { storeJSONLocalStorage, getJSONLocalStorage } from './storage';
+import axios, { type AxiosInstance } from 'axios';
 import {
-  baseUrls,
   AUTH_DETAILS_KEY,
+  baseUrls,
   defaultTheme,
   JOB_MAX_RETRY,
   JOB_RETRY_INTERVAL,
 } from './constants';
-import axios, { type AxiosInstance } from 'axios';
+import { getJSONLocalStorage, storeJSONLocalStorage } from './storage';
 import * as Types from './types';
+import { BuildType } from './types';
 import { getQueryString } from './utils/query-helpers';
 
 export class OktoWallet {
@@ -136,7 +136,7 @@ export class OktoWallet {
 
     try {
       const response = await axios.post(
-        `${this.baseUrl}/api/v1/authenticate`,
+        `${this.baseUrl}/api/v2/authenticate`,
         {
           id_token: idToken,
         },
