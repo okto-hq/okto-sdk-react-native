@@ -216,10 +216,10 @@ export interface Theme {
   textPrimaryColor: String;
   textSecondaryColor: String;
   textTertiaryColor: String;
-  accentColor: String;
+  accent1Color: String;
   accent2Color: String;
-  strokBorderColor: String;
-  strokDividerColor: String;
+  strokeBorderColor: String;
+  strokeDividerColor: String;
   surfaceColor: String;
   backgroundColor: String;
 }

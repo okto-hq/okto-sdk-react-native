@@ -14,10 +14,10 @@ export const defaultTheme: Theme = {
   textPrimaryColor: '0xFFFFFFFF',
   textSecondaryColor: '0xFFFFFFFF',
   textTertiaryColor: '0xFFFFFFFF',
-  accentColor: '0x80433454',
+  accent1Color: '0x80433454',
   accent2Color: '0x80905BF5',
-  strokBorderColor: '0xFFACACAB',
-  strokDividerColor: '0x4DA8A8A8',
+  strokeBorderColor: '0xFFACACAB',
+  strokeDividerColor: '0x4DA8A8A8',
   surfaceColor: '0xFF1F0A2F',
   backgroundColor: '0xFF000000',
 };
