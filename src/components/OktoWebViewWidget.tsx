@@ -32,10 +32,10 @@ export function OktoWebViewWidget({
       `window.localStorage.setItem('textPrimaryColor', '${theme.textPrimaryColor}');` +
       `window.localStorage.setItem('textSecondaryColor', '${theme.textSecondaryColor}');` +
       `window.localStorage.setItem('textTertiaryColor', '${theme.textTertiaryColor}');` +
-      `window.localStorage.setItem('accentColor', '${theme.accentColor}');` +
+      `window.localStorage.setItem('accent1Color', '${theme.accent1Color}');` +
       `window.localStorage.setItem('accent2Color', '${theme.accent2Color}');` +
-      `window.localStorage.setItem('strokBorderColor', '${theme.strokBorderColor}');` +
-      `window.localStorage.setItem('strokDividerColor', '${theme.strokDividerColor}');` +
+      `window.localStorage.setItem('strokeBorderColor', '${theme.strokeBorderColor}');` +
+      `window.localStorage.setItem('strokeDividerColor', '${theme.strokeDividerColor}');` +
       `window.localStorage.setItem('surfaceColor', '${theme.surfaceColor}');` +
       `window.localStorage.setItem('backgroundColor', '${theme.backgroundColor}');`;
 
