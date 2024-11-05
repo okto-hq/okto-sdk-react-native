@@ -6,7 +6,7 @@ import { BuildType } from 'okto-sdk-react-native';
 
 export default function AppMain() {
   return (
-    <OktoProvider apiKey={OKTO_CLIENT_API} buildType={BuildType.SANDBOX}>
+    <OktoProvider apiKey={OKTO_CLIENT_API} buildType={BuildType.STAGING}>
       <App />
     </OktoProvider>
   );
