@@ -447,6 +447,64 @@ export class OktoWallet {
     );
   }
 
+  async sendEmailOTP(email: string): Promise<Types.SendOTPResponse> {
+    return this.makePostRequest<Types.SendOTPResponse>(
+      '/v1/authenticate/email',
+      { email }
+    );
+  }
+
+  async verifyEmailOTP(email: string, otp: string, token: string): Promise<boolean> {
+    try {
+      const response = await this.makePostRequest<Types.OTPAuthResponse>(
+        '/v1/authenticate/email/verify',
+        { email, otp, token }
+      );
+      console.log('verifyEmailOTP response', response);
+      if (response.message === 'success') {
+        const authDetails: Types.AuthDetails = {
+          authToken: response.auth_token,
+          refreshToken: response.refresh_auth_token,
+          deviceToken: response.device_token,
+        };
+        this.updateAuthDetails(authDetails);
+        return true;
+      }
+    } catch (error) {
+      return false;
+    }
+    return false;
+  }
+
+  async sendPhoneOTP(phoneNumber: string, countryShortName: string): Promise<Types.SendOTPResponse> {
+    return this.makePostRequest<Types.SendOTPResponse>(
+      '/v1/authenticate/phone',
+      { phone_number: phoneNumber, country_short_name: countryShortName }
+    );
+  }
+
+  async verifyPhoneOTP(phoneNumber: string, countryShortName: string, otp: string, token: string): Promise<boolean> {
+    try {
+      const response = await this.makePostRequest<Types.OTPAuthResponse>(
+        '/v1/authenticate/phone/verify',
+        { phone_number: phoneNumber, country_short_name: countryShortName, otp, token }
+      );
+      console.log('verifyPhoneOTP response', response);
+      if (response.message === 'success') {
+        const authDetails: Types.AuthDetails = {
+          authToken: response.auth_token,
+          refreshToken: response.refresh_auth_token,
+          deviceToken: response.device_token,
+        };
+        this.updateAuthDetails(authDetails);
+        return true;
+      }
+    } catch (error) {
+      return false;
+    }
+    return false;
+  }
+
   private delay(ms: number) {
     return new Promise((resolve) => setTimeout(resolve, ms));
   }

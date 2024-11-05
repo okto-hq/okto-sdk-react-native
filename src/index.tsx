@@ -23,6 +23,7 @@ import {
   type RawTransactionStatus,
   type RawTransactionStatusData,
   type RawTransactionStatusQuery,
+  type SendOTPResponse,
   type Theme,
   type TokensData,
   type TransferNft,
@@ -155,6 +156,22 @@ export const OktoProvider = ({
     return RnOktoSdk.getTheme();
   }
 
+  function sendEmailOTP(email: string): Promise<SendOTPResponse> {
+    return RnOktoSdk.sendEmailOTP(email);
+  }
+
+  function verifyEmailOTP(email: string, otp: string, token: string): Promise<boolean> {
+    return RnOktoSdk.verifyEmailOTP(email, otp, token);
+  }
+
+  function sendPhoneOTP(phoneNumber: string, countryShortName: string): Promise<SendOTPResponse> {
+    return RnOktoSdk.sendPhoneOTP(phoneNumber, countryShortName);
+  }
+
+  function verifyPhoneOTP(phoneNumber: string, countryShortName: string, otp: string, token: string): Promise<boolean> {
+    return RnOktoSdk.verifyPhoneOTP(phoneNumber, countryShortName, otp, token);
+  }
+
   useEffect(() => {
     RnOktoSdk.init(apiKey, buildType);
   }, [apiKey, buildType]);
@@ -184,6 +201,10 @@ export const OktoProvider = ({
         executeRawTransactionWithJobStatus,
         setTheme,
         getTheme,
+        sendEmailOTP,
+        verifyEmailOTP,
+        sendPhoneOTP,
+        verifyPhoneOTP,
       }}
     >
       {children}
