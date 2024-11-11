@@ -51,6 +51,7 @@ export const PhoneOTPVerification: React.FC<PhoneOTPVerificationProps> = ({
     } catch (err) {
       setError(err instanceof Error ? err.message : 'Failed to send OTP');
       console.error('Send OTP Error:', err);
+      Alert.alert('Error', err instanceof Error ? err.message : 'Failed to send OTP');
     } finally {
       setLoading(false);
     }
@@ -75,6 +76,7 @@ export const PhoneOTPVerification: React.FC<PhoneOTPVerificationProps> = ({
       if (success) {
         onVerificationSuccess?.();
         Alert.alert('Success', 'Phone number verified successfully');
+        setStep('phone');
       } else {
         Alert.alert('Error', 'Invalid OTP');
       }
@@ -82,6 +84,7 @@ export const PhoneOTPVerification: React.FC<PhoneOTPVerificationProps> = ({
       const errorMessage = err instanceof Error ? err.message : 'Failed to verify OTP';
       setError(errorMessage);
       onVerificationError?.(err instanceof Error ? err : new Error(errorMessage));
+      Alert.alert('Error', errorMessage);
     } finally {
       setLoading(false);
     }

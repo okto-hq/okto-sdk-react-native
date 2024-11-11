@@ -50,6 +50,7 @@ export const EmailOTPVerification: React.FC<EmailOTPVerificationProps> = ({
     } catch (err) {
       setError(err instanceof Error ? err.message : 'Failed to send OTP');
       console.error('Send OTP Error:', err);
+      Alert.alert('Error', err instanceof Error ? err.message : 'Failed to send OTP');
     } finally {
       setLoading(false);
     }
@@ -73,6 +74,7 @@ export const EmailOTPVerification: React.FC<EmailOTPVerificationProps> = ({
       if (success) {
         onVerificationSuccess?.();
         Alert.alert('Success', 'Email verified successfully');
+        setStep('email');
       } else {
         Alert.alert('Error', 'Invalid OTP');
       }
