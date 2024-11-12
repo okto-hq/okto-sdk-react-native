@@ -31,6 +31,8 @@ function GetButton({ title, apiFn }: GetButtonProps) {
               })
               .catch((error) => {
                 console.error(`${title} error:`, error);
+                setResultData(error.message);
+                setModalVisible(true);
               });
           }}
         />

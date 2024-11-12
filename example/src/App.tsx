@@ -7,11 +7,14 @@ import {
   Button,
   SafeAreaView,
   ScrollView,
+  Alert,
 } from 'react-native';
 import { useOkto, type OktoContextType } from 'okto-sdk-react-native';
 import SignIn from './SignIn';
 import GetButton from './components/GetButton';
 import TransferTokens from './components/TransferTokens';
+import { EmailOTPVerification } from './components/EmailOtp';
+import { PhoneOTPVerification } from './components/PhoneOtp';
 
 export default function App() {
   const [idToken, setIdToken] = React.useState<string>();
@@ -27,6 +30,7 @@ export default function App() {
     createWallet,
     orderHistory,
     getNftOrderDetails,
+    logOut,
   } = useOkto() as OktoContextType;
 
   function handleAuthenticate(result: any, error: any) {
@@ -59,6 +63,14 @@ export default function App() {
           />
           <View style={styles.padding} />
           <Button
+            title="logout"
+            onPress={() => {
+              logOut();
+              Alert.alert('Success', 'logged out');
+            }}
+          />
+          <View style={styles.padding} />
+          <Button
             title="openOktoBottomsheet"
             onPress={() => {
               showWidgetSheet();
@@ -77,6 +89,8 @@ export default function App() {
           title="getNftOrderDetails"
           apiFn={() => getNftOrderDetails({})}
         />
+        <EmailOTPVerification />
+        <PhoneOTPVerification />
 
         <View style={styles.padding} />
         <TransferTokens />

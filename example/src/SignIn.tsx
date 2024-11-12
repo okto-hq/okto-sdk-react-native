@@ -3,12 +3,11 @@ import {
   GoogleSignin,
   type ConfigureParams,
 } from '@react-native-google-signin/google-signin';
-import { GOOGLE_WEB_CLIENT_ID, GOOGLE_ANDROID_CLIENT_ID } from '@env';
-import React, { useEffect } from 'react';
+import { GOOGLE_WEB_CLIENT_ID } from '@env';
+import React from 'react';
 
 GoogleSignin.configure({
   webClientId: GOOGLE_WEB_CLIENT_ID,
-  androidClientId: GOOGLE_ANDROID_CLIENT_ID,
   scopes: ['profile', 'email'],
 } as ConfigureParams);
 
@@ -37,9 +36,9 @@ export default function SignIn({ onSignIn }: SignInProps) {
     }
   };
 
-  useEffect(()=>{
-    handleGoogleLogin();
-  });
+  // useEffect(()=>{
+  //   handleGoogleLogin();
+  // });
 
   return <Button title="SignIn" onPress={handleGoogleLogin} />;
 }

@@ -48,6 +48,10 @@ export interface OktoContextType {
   ): Promise<RawTransactionStatus>;
   getTheme: () => Theme;
   setTheme: (theme: Partial<Theme>) => void;
+  sendEmailOTP: (email: string) => Promise<SendOTPResponse>;
+  verifyEmailOTP: (email: string, otp: string, token: string) => Promise<boolean>;
+  sendPhoneOTP: (phoneNumber: string, countryShortName: string) => Promise<SendOTPResponse>;
+  verifyPhoneOTP: (phoneNumber: string, countryShortName: string, otp: string, token: string) => Promise<boolean>;
 }
 
 export interface ApiResponse<T> {
@@ -222,4 +226,26 @@ export interface Theme {
   strokeDividerColor: String;
   surfaceColor: String;
   backgroundColor: String;
+}
+
+export interface SendOTPResponse {
+  status: string;
+  message: string;
+  code: number;
+  token: string;
+  trace_id: string;
+}
+
+export interface VerifyEmailOTPRequest {
+  email: string;
+  otp: string;
+  token: string;
+}
+
+export interface OTPAuthResponse {
+  auth_token: string;
+  message: string;
+  refresh_auth_token: string;
+  device_token: string;
+  trace_id: string;
 }
