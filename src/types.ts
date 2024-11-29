@@ -10,6 +10,19 @@ export enum OrderStatus {
   PENDING = 'PENDING',
 }
 
+export enum AuthType {
+  PHONE = 'Phone',
+  EMAIL = 'Email',
+  GAUTH = 'GAuth',
+}
+
+export interface OnboardingModalData {
+  primaryAuthType: AuthType;
+  brandTitle: string;
+  brandSubtitle: string;
+  brandIconUrl: string;
+}
+
 export interface OktoContextType {
   showWidgetSheet: () => void;
   closeBottomSheet: () => void;
@@ -53,6 +66,8 @@ export interface OktoContextType {
   sendPhoneOTP: (phoneNumber: string, countryShortName: string) => Promise<SendOTPResponse>;
   verifyPhoneOTP: (phoneNumber: string, countryShortName: string, otp: string, token: string) => Promise<boolean>;
   updateAuthDetails: (authDetails: AuthDetails | null) => Promise<void>;
+  showOnboardingWidget: (primaryAuth?: AuthType, title?: string, subtitle?: string, iconUrl?: string) => void;
+  closeOnboardingWidget: () => void;
 }
 
 export interface ApiResponse<T> {

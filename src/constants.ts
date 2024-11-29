@@ -6,6 +6,12 @@ export const baseUrls = {
   [BuildType.SANDBOX]: 'https://sandbox-api.okto.tech',
 };
 
+export const onBoardingUrls = {
+  [BuildType.PRODUCTION]: 'https://3p.okto.tech/login_screen/#/login_screen',
+  [BuildType.STAGING]: 'https://3p.oktostage.com/#/login_screen',
+  [BuildType.SANDBOX]: 'https://okto-sandbox.firebaseapp.com/#/login_screen',
+};
+
 export const widgetUrl = 'https://3p.okto.tech/';
 
 export const AUTH_DETAILS_KEY = 'AUTH_DETAILS';

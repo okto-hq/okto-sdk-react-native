@@ -8,6 +8,7 @@ import React, {
 import { OktoBottomSheet } from './components/OktoBottomSheet';
 import { RnOktoSdk } from './OktoWallet';
 import {
+  AuthType,
   BuildType,
   type AuthDetails,
   type ExecuteRawTransaction,
@@ -34,6 +35,7 @@ import {
   type User,
   type WalletData,
 } from './types';
+import { OnboardingWidget } from './components/OnboardingWidget';
 
 const OktoContext = createContext<OktoContextType | null>(null);
 
@@ -41,12 +43,15 @@ export const OktoProvider = ({
   children,
   apiKey,
   buildType,
+  gAuthCb,
 }: {
   children: ReactNode;
   apiKey: string;
   buildType: BuildType;
+  gAuthCb?: () => Promise<string>;
 }) => {
   const oktoBottomSheetRef = useRef<any>(null);
+  const onboardingWidgetRef = useRef<any>(null);
 
   const showWidgetSheet = () => {
     if (RnOktoSdk.isLoggedIn()) {
@@ -59,6 +64,20 @@ export const OktoProvider = ({
   const closeBottomSheet = () => {
     oktoBottomSheetRef.current?.closeSheet();
   };
+
+  const showOnboardingWidget = (
+    primaryAuth: AuthType = AuthType.EMAIL,
+    title: string = '',
+    subtitle: string = '',
+    iconUrl: string = ''
+  ) => {
+    onboardingWidgetRef.current?.openSheet(primaryAuth, title, subtitle, iconUrl);
+  };
+
+  const closeOnboardingWidget = () => {
+    onboardingWidgetRef.current?.closeSheet();
+  };
+
 
   function authenticate(
     idToken: string,
@@ -211,10 +230,13 @@ export const OktoProvider = ({
         verifyEmailOTP,
         sendPhoneOTP,
         verifyPhoneOTP,
+        showOnboardingWidget,
+        closeOnboardingWidget,
       }}
     >
       {children}
       <OktoBottomSheet ref={oktoBottomSheetRef} />
+      <OnboardingWidget ref={onboardingWidgetRef} gAuthCb={gAuthCb ? gAuthCb : async () => ''} />
     </OktoContext.Provider>
   );
 };

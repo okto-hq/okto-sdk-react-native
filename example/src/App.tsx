@@ -9,7 +9,7 @@ import {
   ScrollView,
   Alert,
 } from 'react-native';
-import { useOkto, type OktoContextType } from 'okto-sdk-react-native';
+import { AuthType, useOkto, type OktoContextType } from 'okto-sdk-react-native';
 import SignIn from './SignIn';
 import GetButton from './components/GetButton';
 import TransferTokens from './components/TransferTokens';
@@ -31,6 +31,7 @@ export default function App() {
     orderHistory,
     getNftOrderDetails,
     logOut,
+    showOnboardingWidget,
   } = useOkto() as OktoContextType;
 
   function handleAuthenticate(result: any, error: any) {
@@ -74,6 +75,13 @@ export default function App() {
             title="openOktoBottomsheet"
             onPress={() => {
               showWidgetSheet();
+            }}
+          />
+          <View style={styles.padding} />
+          <Button
+            title="openOnboardingWidget"
+            onPress={() => {
+              showOnboardingWidget(AuthType.GAUTH, 'Okto', 'Okto is a wallet for your digital assets');
             }}
           />
         </View>
