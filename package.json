@@ -1,6 +1,6 @@
 {
   "name": "okto-sdk-react-native",
-  "version": "0.3.0",
+  "version": "0.3.1",
   "description": "React native okto sdk",
   "main": "lib/commonjs/index",
   "module": "lib/module/index",
