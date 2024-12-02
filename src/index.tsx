@@ -9,6 +9,7 @@ import { OktoBottomSheet } from './components/OktoBottomSheet';
 import { RnOktoSdk } from './OktoWallet';
 import {
   BuildType,
+  type AuthDetails,
   type ExecuteRawTransaction,
   type ExecuteRawTransactionData,
   type NetworkData,
@@ -172,6 +173,10 @@ export const OktoProvider = ({
     return RnOktoSdk.verifyPhoneOTP(phoneNumber, countryShortName, otp, token);
   }
 
+  async function updateAuthDetails(authDetails: AuthDetails| null) {
+    await RnOktoSdk.updateAuthDetails(authDetails);
+  }
+
   useEffect(() => {
     RnOktoSdk.init(apiKey, buildType);
   }, [apiKey, buildType]);
@@ -179,6 +184,7 @@ export const OktoProvider = ({
   return (
     <OktoContext.Provider
       value={{
+        updateAuthDetails,
         showWidgetSheet,
         closeBottomSheet,
         authenticate,

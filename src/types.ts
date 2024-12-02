@@ -52,6 +52,7 @@ export interface OktoContextType {
   verifyEmailOTP: (email: string, otp: string, token: string) => Promise<boolean>;
   sendPhoneOTP: (phoneNumber: string, countryShortName: string) => Promise<SendOTPResponse>;
   verifyPhoneOTP: (phoneNumber: string, countryShortName: string, otp: string, token: string) => Promise<boolean>;
+  updateAuthDetails: (authDetails: AuthDetails | null) => Promise<void>;
 }
 
 export interface ApiResponse<T> {
