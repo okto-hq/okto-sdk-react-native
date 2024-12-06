@@ -520,6 +520,16 @@ export class OktoWallet {
   getBuildType(): BuildType {
     return this.buildType;
   }
+
+  async readContractData(
+    network_name: string,
+    data: any,
+  ): Promise<any> {
+    return this.makePostRequest<any>('/v1/readContractData', {
+      network_name,
+      data,
+    });
+  }
 }
 
 export const RnOktoSdk = new OktoWallet();

@@ -196,6 +196,13 @@ export const OktoProvider = ({
     await RnOktoSdk.updateAuthDetails(authDetails);
   }
 
+  async function readContractData(
+    network_name: string,
+    data: any,
+  ): Promise<any> {
+    return RnOktoSdk.readContractData(network_name, data);
+  }
+
   useEffect(() => {
     RnOktoSdk.init(apiKey, buildType);
   }, [apiKey, buildType]);
@@ -232,6 +239,7 @@ export const OktoProvider = ({
         verifyPhoneOTP,
         showOnboardingWidget,
         closeOnboardingWidget,
+        readContractData,
       }}
     >
       {children}

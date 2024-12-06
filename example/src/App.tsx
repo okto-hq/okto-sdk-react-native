@@ -32,6 +32,7 @@ export default function App() {
     getNftOrderDetails,
     logOut,
     showOnboardingWidget,
+    readContractData,
   } = useOkto() as OktoContextType;
 
   function handleAuthenticate(result: any, error: any) {
@@ -47,6 +48,52 @@ export default function App() {
     console.log('Google signIn: Success');
     authenticate(_idToken, handleAuthenticate);
     setIdToken(_idToken);
+  }
+
+  // Add this new function to handle the read contract data
+  async function handleReadContract() {
+    try {
+      const result = await readContractData('POLYGON',
+        {
+          contractAddress: '0x3BA4c387f786bFEE076A58914F5Bd38d668B42c3',
+          abi: {
+            inputs: [],
+            name: 'totalSupply',
+            outputs: [
+              {
+                internalType: 'uint256',
+                name: '',
+                type: 'uint256',
+              },
+            ],
+            stateMutability: 'view',
+            type: 'function',
+          },
+          args: {},
+        }
+      );
+      return result;
+    } catch (error) {
+      console.error('Read contract error:', error);
+      return { error };
+    }
+  }
+
+  async function handleReadContractAptos() {
+    try {
+      const result = await readContractData('APTOS_TESTNET',
+        {
+          function:
+          '0x0000000000000000000000000000000000000000000000000000000000000001::chain_id::get',
+          typeArguments: [],
+          functionArguments: [],
+        }
+      );
+      return result;
+    } catch (error) {
+      console.error('Read contract error:', error);
+      return { error };
+    }
   }
 
   return (
@@ -91,6 +138,8 @@ export default function App() {
         <GetButton title="getSupportedTokens" apiFn={getSupportedTokens} />
         <GetButton title="getUserDetails" apiFn={getUserDetails} />
         <GetButton title="getWallets" apiFn={getWallets} />
+        <GetButton title="Read Contract Data" apiFn={handleReadContract} />
+        <GetButton title="Read Contract Aptos" apiFn={handleReadContractAptos} />
         <GetButton title="createWallet" apiFn={createWallet} />
         <GetButton title="orderHistory" apiFn={orderHistory} />
         <GetButton
