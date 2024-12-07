@@ -68,6 +68,7 @@ export interface OktoContextType {
   updateAuthDetails: (authDetails: AuthDetails | null) => Promise<void>;
   showOnboardingWidget: (primaryAuth?: AuthType, title?: string, subtitle?: string, iconUrl?: string) => void;
   closeOnboardingWidget: () => void;
+  readContractData: (network_name: string, data: any) => Promise<any>;
 }
 
 export interface ApiResponse<T> {
