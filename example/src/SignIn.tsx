@@ -11,7 +11,7 @@ GoogleSignin.configure({
   scopes: ['profile', 'email'],
 } as ConfigureParams);
 
-const GoogleLogin = async () => {
+export const GoogleLogin = async () => {
   await GoogleSignin.hasPlayServices();
   const userInfo = await GoogleSignin.signIn();
   return userInfo;
