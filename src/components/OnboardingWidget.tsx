@@ -101,7 +101,16 @@ const _OnboardingWidget = ({gAuthCb}: {gAuthCb: () => Promise<string>}, ref: any
 
   async function handleMessage(event: any) {
     try {
-        const message = JSON.parse(JSON.parse(event.nativeEvent.data));
+        let message = JSON.parse(event.nativeEvent.data);
+
+        if (typeof message === 'string') {
+          try {
+            message = JSON.parse(message);
+          } catch (error) {
+            console.error('Error parsing okto widget data', error);
+          }
+        }
+
         if (message.type === 'go_back') {
           closeSheet();
         } else if (message.type === 'g_auth') {

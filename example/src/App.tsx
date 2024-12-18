@@ -10,7 +10,7 @@ import {
   Alert,
 } from 'react-native';
 import { AuthType, useOkto, type OktoContextType } from 'okto-sdk-react-native';
-import SignIn from './SignIn';
+import SignIn, { GoogleLogout } from './SignIn';
 import GetButton from './components/GetButton';
 import TransferTokens from './components/TransferTokens';
 import { EmailOTPVerification } from './components/EmailOtp';
@@ -114,6 +114,7 @@ export default function App() {
             title="logout"
             onPress={() => {
               logOut();
+              GoogleLogout();
               Alert.alert('Success', 'logged out');
             }}
           />
