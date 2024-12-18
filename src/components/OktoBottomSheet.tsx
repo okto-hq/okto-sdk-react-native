@@ -72,6 +72,5 @@ const styles = StyleSheet.create({
   },
   modalContent: {
     height: '75%',
-    backgroundColor: 'black',
   },
 });

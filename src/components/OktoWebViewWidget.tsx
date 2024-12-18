@@ -1,7 +1,6 @@
 import React from 'react';
-import { StyleSheet } from 'react-native';
+import { StyleSheet, type ColorValue } from 'react-native';
 import { WebView } from 'react-native-webview';
-import { Loading } from './Loading';
 import { RnOktoSdk } from '../OktoWallet';
 import { widgetUrl } from '../constants';
 
@@ -46,6 +45,12 @@ export function OktoWebViewWidget({
     return injectJs;
   }
 
+  const theme = RnOktoSdk.getTheme();
+  const styles = StyleSheet.create({
+    webView: { flex: 1 , backgroundColor: theme.backgroundColor as ColorValue},
+  });
+
+
   return (
     <WebView
       ref={webViewRef}
@@ -56,12 +61,6 @@ export function OktoWebViewWidget({
       javaScriptEnabled
       domStorageEnabled
       injectedJavaScriptBeforeContentLoaded={getInjecteJs()}
-      renderLoading={() => <Loading />}
-      // webviewDebuggingEnabled
     />
   );
 }
-
-const styles = StyleSheet.create({
-  webView: { flex: 1 },
-});
