@@ -9,8 +9,8 @@ import {
   ScrollView,
   Alert,
 } from 'react-native';
-import { AuthType, useOkto, type OktoContextType } from 'okto-sdk-react-native';
-import SignIn from './SignIn';
+import { useOkto, type OktoContextType } from 'okto-sdk-react-native';
+import SignIn, { GoogleLogout } from './SignIn';
 import GetButton from './components/GetButton';
 import TransferTokens from './components/TransferTokens';
 import { EmailOTPVerification } from './components/EmailOtp';
@@ -114,6 +114,7 @@ export default function App() {
             title="logout"
             onPress={() => {
               logOut();
+              GoogleLogout();
               Alert.alert('Success', 'logged out');
             }}
           />
@@ -128,7 +129,7 @@ export default function App() {
           <Button
             title="openOnboardingWidget"
             onPress={() => {
-              showOnboardingWidget(AuthType.GAUTH, 'Okto', 'Okto is a wallet for your digital assets');
+              showOnboardingWidget();
             }}
           />
         </View>

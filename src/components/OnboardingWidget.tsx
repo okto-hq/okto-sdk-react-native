@@ -9,10 +9,10 @@ import {
   View,
   StyleSheet,
   TouchableWithoutFeedback,
+  type ColorValue,
 } from 'react-native';
 import { WebView } from 'react-native-webview';
 import { RnOktoSdk } from '../OktoWallet';
-import { Loading } from './Loading';
 import { onBoardingUrls } from '../constants';
 import type { AuthDetails, AuthType, OnboardingModalData } from '../types';
 import Clipboard from '@react-native-clipboard/clipboard';
@@ -101,7 +101,16 @@ const _OnboardingWidget = ({gAuthCb}: {gAuthCb: () => Promise<string>}, ref: any
 
   async function handleMessage(event: any) {
     try {
-        const message = JSON.parse(JSON.parse(event.nativeEvent.data));
+        let message = JSON.parse(event.nativeEvent.data);
+
+        if (typeof message === 'string') {
+          try {
+            message = JSON.parse(message);
+          } catch (error) {
+            console.error('Error parsing okto widget data', error);
+          }
+        }
+
         if (message.type === 'go_back') {
           closeSheet();
         } else if (message.type === 'g_auth') {
@@ -127,6 +136,12 @@ const _OnboardingWidget = ({gAuthCb}: {gAuthCb: () => Promise<string>}, ref: any
       }
   }
 
+  const theme = RnOktoSdk.getTheme();
+  const webViewStyles = StyleSheet.create({
+    webView: { flex: 1 , backgroundColor: theme.backgroundColor as ColorValue},
+  });
+
+
   return (
     <Modal
       transparent
@@ -142,15 +157,12 @@ const _OnboardingWidget = ({gAuthCb}: {gAuthCb: () => Promise<string>}, ref: any
           <WebView
             ref={webViewRef}
             source={{ uri: onBoardingUrls[RnOktoSdk.getBuildType()] }}
-            style={styles.webView}
+            style={webViewStyles.webView}
             onNavigationStateChange={handleNavigationStateChange}
             onMessage={handleMessage}
-            startInLoadingState
             javaScriptEnabled
             domStorageEnabled
             injectedJavaScriptBeforeContentLoaded={getInjecteJs()}
-            renderLoading={() => <Loading />}
-            webviewDebuggingEnabled
           />
         </View>
       </View>
@@ -169,7 +181,5 @@ const styles = StyleSheet.create({
   },
   modalContent: {
     height: '75%',
-    backgroundColor: 'black',
   },
-  webView: { flex: 1 },
 });

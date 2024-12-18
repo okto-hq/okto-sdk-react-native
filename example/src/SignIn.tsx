@@ -17,6 +17,10 @@ export const GoogleLogin = async () => {
   return userInfo;
 };
 
+export const GoogleLogout = async () => {
+  await GoogleSignin.signOut();
+};
+
 interface SignInProps {
   onSignIn: (idToken: string) => void; // Define the type of the onSignIn prop
 }
