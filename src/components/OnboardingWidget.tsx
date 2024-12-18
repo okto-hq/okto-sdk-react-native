@@ -130,6 +130,7 @@ const _OnboardingWidget = ({gAuthCb}: {gAuthCb: () => Promise<string>}, ref: any
             deviceToken: authData.device_token,
           };
           await RnOktoSdk.updateAuthDetails(authDetails);
+          closeSheet();
         }
       } catch (error) {
         console.error('Error parsing okto widget data', error);
@@ -180,6 +181,6 @@ const styles = StyleSheet.create({
     flex: 1,
   },
   modalContent: {
-    height: '75%',
+    height: '100%',
   },
 });
