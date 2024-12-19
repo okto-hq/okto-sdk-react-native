@@ -2,7 +2,7 @@ import React from 'react';
 import { StyleSheet, type ColorValue } from 'react-native';
 import { WebView } from 'react-native-webview';
 import { RnOktoSdk } from '../OktoWallet';
-import { widgetUrl } from '../constants';
+import { widgetUrls } from '../constants';
 
 export function OktoWebViewWidget({
   webViewRef,
@@ -50,11 +50,12 @@ export function OktoWebViewWidget({
     webView: { flex: 1 , backgroundColor: theme.backgroundColor as ColorValue},
   });
 
+  const buildType = RnOktoSdk.getBuildType();
 
   return (
     <WebView
       ref={webViewRef}
-      source={{ uri: widgetUrl }}
+      source={{ uri: widgetUrls[buildType] }}
       style={styles.webView}
       onNavigationStateChange={handleNavigationStateChange}
       startInLoadingState
