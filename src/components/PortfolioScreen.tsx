@@ -15,7 +15,7 @@ import { RnOktoSdk } from '../OktoWallet';
 import WebView from 'react-native-webview';
 import { widgetUrls } from '../constants';
 
-const _OktoBottomSheet = ({}: {}, ref: any) => {
+const _PortfolioScreen = ({}: {}, ref: any) => {
   const [showScreen, setShowScreen] = useState<boolean>(false);
   const [webViewCanGoBack, setWebViewCanGoBack] = useState(false);
   const webViewRef = useRef<any>(null);
@@ -106,7 +106,7 @@ const _OktoBottomSheet = ({}: {}, ref: any) => {
     </Modal>
   );
 };
-export const OktoBottomSheet = forwardRef(_OktoBottomSheet);
+export const PortfolioScreen = forwardRef(_PortfolioScreen);
 
 const styles = StyleSheet.create({
   modalOverlay: {

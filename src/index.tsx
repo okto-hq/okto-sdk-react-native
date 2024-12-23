@@ -5,7 +5,7 @@ import React, {
   type ReactNode,
   useEffect,
 } from 'react';
-import { OktoBottomSheet } from './components/OktoBottomSheet';
+import { PortfolioScreen } from './components/PortfolioScreen';
 import { RnOktoSdk } from './OktoWallet';
 import {
   AuthType,
@@ -50,19 +50,19 @@ export const OktoProvider = ({
   buildType: BuildType;
   gAuthCb?: () => Promise<string>;
 }) => {
-  const oktoBottomSheetRef = useRef<any>(null);
+  const PortfolioScreenRef = useRef<any>(null);
   const onboardingWidgetRef = useRef<any>(null);
 
   const showWidgetSheet = () => {
     if (RnOktoSdk.isLoggedIn()) {
-      oktoBottomSheetRef.current?.openSheet();
+      PortfolioScreenRef.current?.openSheet();
     } else {
       console.error('user not logged in');
     }
   };
 
   const closeBottomSheet = () => {
-    oktoBottomSheetRef.current?.closeSheet();
+    PortfolioScreenRef.current?.closeSheet();
   };
 
   const showOnboardingWidget = (
@@ -243,7 +243,7 @@ export const OktoProvider = ({
       }}
     >
       {children}
-      <OktoBottomSheet ref={oktoBottomSheetRef} />
+      <PortfolioScreen ref={PortfolioScreenRef} />
       <OnboardingWidget ref={onboardingWidgetRef} gAuthCb={gAuthCb ? gAuthCb : async () => ''} />
     </OktoContext.Provider>
   );
