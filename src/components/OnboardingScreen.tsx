@@ -12,19 +12,26 @@ import {
   type ColorValue,
 } from 'react-native';
 import { WebView } from 'react-native-webview';
-import { RnOktoSdk } from '../OktoWallet';
 import { onBoardingUrls } from '../constants';
-import type { AuthDetails, AuthType, BrandData } from '../types';
+import type { AuthDetails, AuthType, BrandData, BuildType, Theme } from '../types';
 import Clipboard from '@react-native-clipboard/clipboard';
 
 const _OnboardingScreen = ({
+    updateAuthCb,
     gAuthCb,
+    buildType,
+    apiKey,
     brandData,
     primaryAuth,
+    theme,
 }: {
+  updateAuthCb: (authDetails: AuthDetails) => Promise<void>,
   gAuthCb: () => Promise<string>,
+  buildType: BuildType,
+  apiKey: string,
   brandData: BrandData,
-  primaryAuth: AuthType
+  primaryAuth: AuthType,
+  theme: Theme,
 }, ref: any) => {
   const [showScreen, setShowScreen] = useState<boolean>(false);
   const [webViewCanGoBack, setWebViewCanGoBack] = useState(false);
@@ -59,9 +66,6 @@ const _OnboardingScreen = ({
 
   function getInjecteJs(): string {
     let injectJs = '';
-    const theme = RnOktoSdk.getTheme();
-    const buildType = RnOktoSdk.getBuildType();
-
     injectJs +=
       `window.localStorage.setItem('ENVIRONMENT', '${buildType}');` +
       `window.localStorage.setItem('textPrimaryColor', '${theme.textPrimaryColor}');` +
@@ -73,7 +77,7 @@ const _OnboardingScreen = ({
       `window.localStorage.setItem('strokeDividerColor', '${theme.strokeDividerColor}');` +
       `window.localStorage.setItem('surfaceColor', '${theme.surfaceColor}');` +
       `window.localStorage.setItem('backgroundColor', '${theme.backgroundColor}');` +
-      `window.localStorage.setItem('API_KEY', '${RnOktoSdk.getApiKey()}');` +
+      `window.localStorage.setItem('API_KEY', '${apiKey}');` +
       `window.localStorage.setItem('primaryAuthType', '${primaryAuth}');` +
       `window.localStorage.setItem('brandTitle', '${brandData.title}');` +
       `window.localStorage.setItem('brandSubtitle', '${brandData.subtitle}');` +
@@ -135,7 +139,7 @@ const _OnboardingScreen = ({
             refreshToken: authData.refresh_auth_token,
             deviceToken: authData.device_token,
           };
-          await RnOktoSdk.updateAuthDetails(authDetails);
+          await updateAuthCb(authDetails);
           close();
         }
       } catch (error) {
@@ -143,7 +147,6 @@ const _OnboardingScreen = ({
       }
   }
 
-  const theme = RnOktoSdk.getTheme();
   const webViewStyles = StyleSheet.create({
     webView: { flex: 1 , backgroundColor: theme.backgroundColor as ColorValue},
   });
@@ -163,7 +166,7 @@ const _OnboardingScreen = ({
         <View style={styles.modalContent}>
           <WebView
             ref={webViewRef}
-            source={{ uri: onBoardingUrls[RnOktoSdk.getBuildType()] }}
+            source={{ uri: onBoardingUrls[buildType] }}
             style={webViewStyles.webView}
             onNavigationStateChange={handleNavigationStateChange}
             onMessage={handleMessage}
