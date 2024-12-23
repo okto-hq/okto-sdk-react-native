@@ -9,8 +9,11 @@ import {
   View,
   StyleSheet,
   TouchableWithoutFeedback,
+  type ColorValue,
 } from 'react-native';
-import { OktoWebViewWidget } from './OktoWebViewWidget';
+import { RnOktoSdk } from '../OktoWallet';
+import WebView from 'react-native-webview';
+import { widgetUrls } from '../constants';
 
 const _OktoBottomSheet = ({}: {}, ref: any) => {
   const [showScreen, setShowScreen] = useState<boolean>(false);
@@ -38,6 +41,44 @@ const _OktoBottomSheet = ({}: {}, ref: any) => {
     }
   }
 
+  function handleNavigationStateChange(navState: any) {
+    if (webViewCanGoBack !== navState.canGoBack) {
+      setWebViewCanGoBack(navState.canGoBack);
+    }
+  }
+
+  function getInjecteJs(): string {
+    let injectJs = '';
+    const authToken = RnOktoSdk.getAuthToken();
+    const theme = RnOktoSdk.getTheme();
+    const buildType = RnOktoSdk.getBuildType();
+
+    injectJs +=
+      `window.localStorage.setItem('ENVIRONMENT', '${buildType}');` +
+      `window.localStorage.setItem('textPrimaryColor', '${theme.textPrimaryColor}');` +
+      `window.localStorage.setItem('textSecondaryColor', '${theme.textSecondaryColor}');` +
+      `window.localStorage.setItem('textTertiaryColor', '${theme.textTertiaryColor}');` +
+      `window.localStorage.setItem('accent1Color', '${theme.accent1Color}');` +
+      `window.localStorage.setItem('accent2Color', '${theme.accent2Color}');` +
+      `window.localStorage.setItem('strokeBorderColor', '${theme.strokeBorderColor}');` +
+      `window.localStorage.setItem('strokeDividerColor', '${theme.strokeDividerColor}');` +
+      `window.localStorage.setItem('surfaceColor', '${theme.surfaceColor}');` +
+      `window.localStorage.setItem('backgroundColor', '${theme.backgroundColor}');`;
+
+    if (authToken) {
+      injectJs +=
+        `window.localStorage.setItem('authToken', '${authToken}');`;
+    }
+    return injectJs;
+  }
+
+  const theme = RnOktoSdk.getTheme();
+  const webViewStyles = StyleSheet.create({
+    webView: { flex: 1 , backgroundColor: theme.backgroundColor as ColorValue},
+  });
+
+  const buildType = RnOktoSdk.getBuildType();
+
   return (
     <Modal
       transparent
@@ -50,10 +91,15 @@ const _OktoBottomSheet = ({}: {}, ref: any) => {
           <View style={styles.modalEmpty} />
         </TouchableWithoutFeedback>
         <View style={styles.modalContent}>
-          <OktoWebViewWidget
-            webViewRef={webViewRef}
-            canGoBack={webViewCanGoBack}
-            setCanGoBack={setWebViewCanGoBack}
+          <WebView
+            ref={webViewRef}
+            source={{ uri: widgetUrls[buildType] }}
+            style={webViewStyles.webView}
+            onNavigationStateChange={handleNavigationStateChange}
+            startInLoadingState
+            javaScriptEnabled
+            domStorageEnabled
+            injectedJavaScriptBeforeContentLoaded={getInjecteJs()}
           />
         </View>
       </View>
