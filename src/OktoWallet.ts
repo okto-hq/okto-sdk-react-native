@@ -6,7 +6,7 @@ import {
   JOB_MAX_RETRY,
   JOB_RETRY_INTERVAL,
 } from './constants';
-import { getJSONLocalStorage, storeJSONLocalStorage } from './storage';
+import { getJSONLocalStorage, storeJSONLocalStorage } from './utils/storage';
 import * as Types from './types';
 import { BuildType } from './types';
 import { getQueryString } from './utils/query-helpers';

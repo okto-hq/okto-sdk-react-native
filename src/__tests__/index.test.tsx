@@ -4,7 +4,7 @@ import { OktoWallet } from '../OktoWallet';
 import { AUTH_DETAILS_KEY, baseUrls } from '../constants';
 import * as Types from '../types';
 import { mockAuthDetails, mockAuthenticateData, mockNetworkData, mockNftOrderData, mockNftTransferData, mockOrderData, mockPortfolioData, mockRawTransactionData, mockRawTransactionStatusData, mockTokensData, mockTransferTokensData, mockUserData, mockWalletData} from '../../__mocks__/mockResponses';
-import { getJSONLocalStorage, storeJSONLocalStorage } from '../storage';
+import { getJSONLocalStorage, storeJSONLocalStorage } from '../utils/storage';
 jest.mock('../storage');
 
 // Mock axios and storage methods
