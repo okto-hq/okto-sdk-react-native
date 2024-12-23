@@ -23,6 +23,8 @@ export interface BrandData {
 }
 
 export interface OktoContextType {
+  isLoggedIn: boolean;
+  isReady: boolean;
   showWidgetSheet: () => void;
   closeBottomSheet: () => void;
   authenticate: (
@@ -40,7 +42,7 @@ export interface OktoContextType {
   getSupportedTokens: () => Promise<TokensData>;
   getUserDetails: () => Promise<User>;
   getWallets: () => Promise<WalletData>;
-  orderHistory: (query?: Partial<OrderQuery>) => Promise<OrderData>;
+  orderHistory: (query: Partial<OrderQuery>) => Promise<OrderData>;
   getNftOrderDetails(
     query: Partial<NftOrderDetailsQuery>
   ): Promise<NftOrderDetailsData>;
