@@ -11,11 +11,19 @@ import {
   TouchableWithoutFeedback,
   type ColorValue,
 } from 'react-native';
-import { RnOktoSdk } from '../OktoWallet';
 import WebView from 'react-native-webview';
 import { widgetUrls } from '../constants';
+import type { BuildType, Theme } from '../types';
 
-const _PortfolioScreen = ({}: {}, ref: any) => {
+const _PortfolioScreen = ({
+  authToken,
+  buildType,
+  theme,
+}: {
+  authToken: string | undefined,
+  buildType: BuildType,
+  theme: Theme,
+}, ref: any) => {
   const [showScreen, setShowScreen] = useState<boolean>(false);
   const [webViewCanGoBack, setWebViewCanGoBack] = useState(false);
   const webViewRef = useRef<any>(null);
@@ -49,9 +57,6 @@ const _PortfolioScreen = ({}: {}, ref: any) => {
 
   function getInjecteJs(): string {
     let injectJs = '';
-    const authToken = RnOktoSdk.getAuthToken();
-    const theme = RnOktoSdk.getTheme();
-    const buildType = RnOktoSdk.getBuildType();
 
     injectJs +=
       `window.localStorage.setItem('ENVIRONMENT', '${buildType}');` +
@@ -72,12 +77,10 @@ const _PortfolioScreen = ({}: {}, ref: any) => {
     return injectJs;
   }
 
-  const theme = RnOktoSdk.getTheme();
   const webViewStyles = StyleSheet.create({
     webView: { flex: 1 , backgroundColor: theme.backgroundColor as ColorValue},
   });
 
-  const buildType = RnOktoSdk.getBuildType();
 
   return (
     <Modal
