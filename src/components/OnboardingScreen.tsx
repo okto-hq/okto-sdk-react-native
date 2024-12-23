@@ -17,7 +17,7 @@ import { onBoardingUrls } from '../constants';
 import type { AuthDetails, AuthType, OnboardingModalData } from '../types';
 import Clipboard from '@react-native-clipboard/clipboard';
 
-const _OnboardingWidget = ({gAuthCb}: {gAuthCb: () => Promise<string>}, ref: any) => {
+const _OnboardingScreen = ({gAuthCb}: {gAuthCb: () => Promise<string>}, ref: any) => {
   const [showScreen, setShowScreen] = useState<boolean>(false);
   const [webViewCanGoBack, setWebViewCanGoBack] = useState(false);
   const webViewRef = useRef<any>(null);
@@ -170,7 +170,7 @@ const _OnboardingWidget = ({gAuthCb}: {gAuthCb: () => Promise<string>}, ref: any
     </Modal>
   );
 };
-export const OnboardingWidget = forwardRef(_OnboardingWidget);
+export const OnboardingScreen = forwardRef(_OnboardingScreen);
 
 const styles = StyleSheet.create({
   modalOverlay: {

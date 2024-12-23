@@ -35,7 +35,7 @@ import {
   type User,
   type WalletData,
 } from './types';
-import { OnboardingWidget } from './components/OnboardingWidget';
+import { OnboardingScreen } from './components/OnboardingScreen';
 
 const OktoContext = createContext<OktoContextType | null>(null);
 
@@ -244,7 +244,7 @@ export const OktoProvider = ({
     >
       {children}
       <PortfolioScreen ref={PortfolioScreenRef} />
-      <OnboardingWidget ref={onboardingWidgetRef} gAuthCb={gAuthCb ? gAuthCb : async () => ''} />
+      <OnboardingScreen ref={onboardingWidgetRef} gAuthCb={gAuthCb ? gAuthCb : async () => ''} />
     </OktoContext.Provider>
   );
 };
