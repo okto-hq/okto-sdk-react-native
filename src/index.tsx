@@ -11,6 +11,7 @@ import {
   AuthType,
   BuildType,
   type AuthDetails,
+  type BrandData,
   type ExecuteRawTransaction,
   type ExecuteRawTransactionData,
   type NetworkData,
@@ -36,6 +37,7 @@ import {
   type WalletData,
 } from './types';
 import { OnboardingScreen } from './components/OnboardingScreen';
+import { defaultBrandData } from './constants';
 
 const OktoContext = createContext<OktoContextType | null>(null);
 
@@ -44,38 +46,37 @@ export const OktoProvider = ({
   apiKey,
   buildType,
   gAuthCb,
+  primaryAuth = AuthType.EMAIL,
+  brandData = defaultBrandData,
 }: {
   children: ReactNode;
   apiKey: string;
   buildType: BuildType;
   gAuthCb?: () => Promise<string>;
+  primaryAuth?: AuthType;
+  brandData?: BrandData;
 }) => {
   const PortfolioScreenRef = useRef<any>(null);
   const onboardingWidgetRef = useRef<any>(null);
 
   const showWidgetSheet = () => {
     if (RnOktoSdk.isLoggedIn()) {
-      PortfolioScreenRef.current?.openSheet();
+      PortfolioScreenRef.current?.open();
     } else {
       console.error('user not logged in');
     }
   };
 
   const closeBottomSheet = () => {
-    PortfolioScreenRef.current?.closeSheet();
+    PortfolioScreenRef.current?.close();
   };
 
-  const showOnboardingWidget = (
-    primaryAuth: AuthType = AuthType.EMAIL,
-    title: string = '',
-    subtitle: string = '',
-    iconUrl: string = ''
-  ) => {
-    onboardingWidgetRef.current?.openSheet(primaryAuth, title, subtitle, iconUrl);
+  const showOnboardingWidget = () => {
+    onboardingWidgetRef.current?.open();
   };
 
   const closeOnboardingWidget = () => {
-    onboardingWidgetRef.current?.closeSheet();
+    onboardingWidgetRef.current?.close();
   };
 
 
@@ -244,7 +245,12 @@ export const OktoProvider = ({
     >
       {children}
       <PortfolioScreen ref={PortfolioScreenRef} />
-      <OnboardingScreen ref={onboardingWidgetRef} gAuthCb={gAuthCb ? gAuthCb : async () => ''} />
+      <OnboardingScreen
+        ref={onboardingWidgetRef}
+        gAuthCb={gAuthCb ? gAuthCb : async () => ''}
+        primaryAuth={primaryAuth}
+        brandData={brandData}
+      />
     </OktoContext.Provider>
   );
 };

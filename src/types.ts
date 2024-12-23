@@ -16,11 +16,10 @@ export enum AuthType {
   GAUTH = 'GAuth',
 }
 
-export interface OnboardingModalData {
-  primaryAuthType: AuthType;
-  brandTitle: string;
-  brandSubtitle: string;
-  brandIconUrl: string;
+export interface BrandData {
+  title: string;
+  subtitle: string;
+  iconUrl: string;
 }
 
 export interface OktoContextType {

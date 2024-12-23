@@ -20,24 +20,24 @@ const _PortfolioScreen = ({}: {}, ref: any) => {
   const [webViewCanGoBack, setWebViewCanGoBack] = useState(false);
   const webViewRef = useRef<any>(null);
 
-  const openSheet = () => {
+  const open = () => {
     setShowScreen(true);
   };
 
-  const closeSheet = () => {
+  const close = () => {
     setShowScreen(false);
   };
 
   useImperativeHandle(ref, () => ({
-    openSheet,
-    closeSheet,
+    open,
+    close,
   }));
 
   function handleBackPress() {
     if (webViewCanGoBack) {
       webViewRef.current?.goBack();
     } else {
-      closeSheet();
+      close();
     }
   }
 
@@ -87,7 +87,7 @@ const _PortfolioScreen = ({}: {}, ref: any) => {
       onRequestClose={handleBackPress}
     >
       <View style={styles.modalOverlay}>
-        <TouchableWithoutFeedback onPress={closeSheet}>
+        <TouchableWithoutFeedback onPress={close}>
           <View style={styles.modalEmpty} />
         </TouchableWithoutFeedback>
         <View style={styles.modalContent}>
