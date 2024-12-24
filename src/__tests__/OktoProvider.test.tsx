@@ -6,7 +6,7 @@ import { BuildType } from '../types';
 import axios from 'axios';
 import MockAdapter from 'axios-mock-adapter';
 import { baseUrls } from '../constants';
-import { mockAuthenticateData } from '../../__mocks__/mockResponses';
+import { mockAuthenticateData, mockEmailOTPVerifyResponse } from '../../__mocks__/mockResponses';
 import { refFunctions } from '../../__mocks__/react-native-webview';
 
 // Mock axios
@@ -253,81 +253,36 @@ describe('OktoProvider', () => {
     });
   });
 
-//   it('should handle email OTP verification', async () => {
-//     mockAxios.onPost(`${baseUrl}/api/v1/authenticate/email/verify`).reply(200, {
-//       message: 'success',
-//       auth_token: 'new-auth-token',
-//       refresh_auth_token: 'new-refresh-token',
-//       device_token: 'new-device-token',
-//     });
+  it('should handle email OTP verification', async () => {
+    mockAxios.onPost(`${baseUrl}/api/v1/authenticate/email/verify`).reply(200, mockEmailOTPVerifyResponse);
 
-//     // Create a component that will test OTP verification
-//     const OTPTestComponent = () => {
-//       const { isReady, verifyEmailOTP } = useOkto();
+    // Create a component that will test OTP verification
+    const OTPTestComponent = () => {
+      const { isReady, verifyEmailOTP } = useOkto();
 
-//       React.useEffect(() => {
-//         if (!isReady) {return;}
+      React.useEffect(() => {
+        if (!isReady) {return;}
 
-//         const testOTP = async () => {
-//           const result = await verifyEmailOTP('test@email.com', '123456', 'token');
-//           expect(result).toBe(true);
-//         };
+        const testOTP = async () => {
+          const result = await verifyEmailOTP('test@email.com', '123456', 'token');
+          expect(result).toBe(true);
+        };
 
-//         testOTP();
-//       // eslint-disable-next-line react-hooks/exhaustive-deps
-//       }, [isReady]);
+        testOTP();
+      // eslint-disable-next-line react-hooks/exhaustive-deps
+      }, [isReady]);
 
-//       return <Text>OTP Test</Text>;
-//     };
+      return <Text>OTP Test</Text>;
+    };
 
-//     render(
-//       <OktoProvider apiKey={apiKey} buildType={buildType}>
-//         <OTPTestComponent />
-//       </OktoProvider>
-//     );
+    render(
+      <OktoProvider apiKey={apiKey} buildType={buildType}>
+        <OTPTestComponent />
+      </OktoProvider>
+    );
 
-//     await act(async () => {
-//       await new Promise(resolve => setTimeout(resolve, 0));
-//     });
-//   });
-
-//   it('should handle widget sheet display', async () => {
-//     const { getByText } = render(
-//       <OktoProvider apiKey={apiKey} buildType={buildType}>
-//         <TestComponent />
-//       </OktoProvider>
-//     );
-
-//     await act(async () => {
-//       const showWidgetButton = getByText('Show Widget');
-//       showWidgetButton.props.onPress();
-//     });
-//   });
-
-//   it('should handle WebView reload', async () => {
-//     // Create a component that will test WebView reload
-//     const ReloadTestComponent = () => {
-//       const { isReady, reloadWebView } = useOkto();
-
-//       React.useEffect(() => {
-//         if (!isReady) {return;}
-
-//         reloadWebView();
-//         expect(refFunctions.reload).toHaveBeenCalled();
-//       // eslint-disable-next-line react-hooks/exhaustive-deps
-//       }, [isReady]);
-
-//       return <Text>Reload Test</Text>;
-//     };
-
-//     render(
-//       <OktoProvider apiKey={apiKey} buildType={buildType}>
-//         <ReloadTestComponent />
-//       </OktoProvider>
-//     );
-
-//     await act(async () => {
-//       await new Promise(resolve => setTimeout(resolve, 0));
-//     });
-//   });
+    await act(async () => {
+      await new Promise(resolve => setTimeout(resolve, 0));
+    });
+  });
 });

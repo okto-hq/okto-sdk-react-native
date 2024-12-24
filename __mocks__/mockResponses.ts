@@ -141,3 +141,10 @@ export const mockRawTransactionStatusData = mockApiResponse({
     },
   ],
 });
+
+export const mockEmailOTPVerifyResponse = mockApiResponse({
+  message: 'success',
+  auth_token: 'new-auth-token',
+  refresh_auth_token: 'new-refresh-token',
+  device_token: 'new-device-token',
+});
