@@ -37,10 +37,10 @@ export default function App() {
 
   function handleAuthenticate(result: any, error: any) {
     if (result) {
-      console.log('authentication successful');
+      Alert.alert('authentication successful');
     }
     if (error) {
-      console.error('authentication error:', error);
+      Alert.alert('authentication error:', error);
     }
   }
 
