@@ -103,8 +103,12 @@
       "<rootDir>/lib/"
     ],
     "moduleNameMapper": {
-      "^react-native-webview$": "<rootDir>/__mocks__/react-native-webview.ts"
-    }
+      "^@react-native-clipboard/clipboard$": "<rootDir>/__mocks__/@react-native-clipboard/clipboard.ts",
+      "react-native-webview": "<rootDir>/__mocks__/react-native-webview.tsx"
+    },
+    "transformIgnorePatterns": [
+      "node_modules/(?!(jest-)?react-native|@react-native|@react-navigation)"
+    ]
   },
   "commitlint": {
     "extends": [
@@ -171,5 +175,9 @@
         }
       ]
     ]
+  },
+  "dependencies": {
+    "@testing-library/dom": "^10.4.0",
+    "@testing-library/react": "^16.1.0"
   }
 }
