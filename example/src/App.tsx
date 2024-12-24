@@ -99,7 +99,7 @@ export default function App() {
   return (
     <SafeAreaView>
       <ScrollView style={styles.container}>
-        <Text style={styles.title}>Okto SDK TEST App</Text>
+        <Text style={styles.title}>Okto SDK React Native</Text>
         <View style={styles.buttonGroup}>
           <SignIn onSignIn={handleSignIn} />
           <View style={styles.padding} />
@@ -159,12 +159,14 @@ export default function App() {
 
 const styles = StyleSheet.create({
   container: {
+    backgroundColor: 'black',
     padding: 10,
   },
   title: {
     fontSize: 20,
     fontWeight: 'bold',
     marginVertical: 20,
+    color: 'white',
   },
   buttonGroup: {
     marginBottom: 20,
