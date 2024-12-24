@@ -119,35 +119,64 @@ describe('OktoProvider', () => {
 
   });
 
-//   it('should handle logout', async () => {
-//     const { getByTestId } = render(
-//       <OktoProvider apiKey={apiKey} buildType={buildType}>
-//         <TestComponent />
-//       </OktoProvider>
-//     );
+  it('should handle logout', async () => {
+    render(
+      <OktoProvider apiKey={apiKey} buildType={buildType}>
+        <TestComponent />
+      </OktoProvider>
+    );
 
-//     const okto = useOkto();
+    // Create a component that will test logout functionality
+    const LogoutTestComponent = () => {
+      const { isReady,isLoggedIn, authenticate, logOut } = useOkto();
 
-//     // First login
-//     mockAxios.onPost(`${baseUrl}/api/v2/authenticate`).reply(200, {
-//       status: 'success',
-//       data: mockAuthenticateData,
-//     });
+      React.useEffect(() => {
+        if (!isReady) {return;}
 
-//     await act(async () => {
-//       await new Promise((resolve) => {
-//         okto.authenticate('test-token', resolve);
-//       });
-//     });
+        const testLogout = async () => {
+          // First authenticate
+          await new Promise((resolve) => {
+            authenticate('test-token', resolve);
+          });
 
-//     // Then logout
-//     await act(async () => {
-//       await okto.logOut();
-//     });
+          // Then logout
+          await logOut();
 
-//   });
+          // Verify logout status
+          expect(isLoggedIn).toBe(false);
+        };
+
+        testLogout();
+      // eslint-disable-next-line react-hooks/exhaustive-deps
+      }, [isReady]);
+
+      return <Text>Logout Test</Text>;
+    };
+
+    mockAxios.onPost(`${baseUrl}/api/v2/authenticate`).reply(200, {
+      status: 'success',
+      data: mockAuthenticateData,
+    });
+
+    render(
+      <OktoProvider apiKey={apiKey} buildType={buildType}>
+        <LogoutTestComponent />
+      </OktoProvider>
+    );
+
+    await act(async () => {
+      await new Promise(resolve => setTimeout(resolve, 0));
+    });
+  });
 
 //   it('should handle portfolio data fetch', async () => {
+//     const mockPortfolioData = {
+//       data: {
+//         portfolioItems: [],
+//         totalValue: 1000,
+//       },
+//     };
+
 //     mockAxios.onPost(`${baseUrl}/api/v2/authenticate`).reply(200, {
 //       status: 'success',
 //       data: mockAuthenticateData,
@@ -158,43 +187,69 @@ describe('OktoProvider', () => {
 //       data: mockPortfolioData,
 //     });
 
+//     // Create a component that will test portfolio fetch
+//     const PortfolioTestComponent = () => {
+//       const { isReady, authenticate, getPortfolio } = useOkto();
+
+//       React.useEffect(() => {
+//         if (!isReady) {return;}
+
+//         const testPortfolio = async () => {
+//           // First authenticate
+//           await new Promise((resolve) => {
+//             authenticate('test-token', resolve);
+//           });
+
+//           // Then fetch portfolio
+//           const portfolio = await getPortfolio();
+//           expect(portfolio).toEqual(mockPortfolioData.data);
+//         };
+
+//         testPortfolio();
+//       // eslint-disable-next-line react-hooks/exhaustive-deps
+//       }, [isReady]);
+
+//       return <Text>Portfolio Test</Text>;
+//     };
+
 //     render(
 //       <OktoProvider apiKey={apiKey} buildType={buildType}>
-//         <TestComponent />
+//         <PortfolioTestComponent />
 //       </OktoProvider>
 //     );
 
-//     const okto = useOkto();
-
-//     // Login first
 //     await act(async () => {
-//       await new Promise((resolve) => {
-//         okto.authenticate('test-token', resolve);
-//       });
-//     });
-
-//     // Then fetch portfolio
-//     await act(async () => {
-//       const portfolio = await okto.getPortfolio();
-//       expect(portfolio).toEqual(mockPortfolioData.data);
+//       await new Promise(resolve => setTimeout(resolve, 0));
 //     });
 //   });
 
 //   it('should handle theme updates', async () => {
+//     // Create a component that will test theme updates
+//     const ThemeTestComponent = () => {
+//       const { isReady, setTheme, getTheme } = useOkto();
+
+//       React.useEffect(() => {
+//         if (!isReady) {return;}
+
+//         const newTheme = { textPrimaryColor: '#000000' };
+//         setTheme(newTheme);
+
+//         expect(getTheme().textPrimaryColor).toBe('#000000');
+//       // eslint-disable-next-line react-hooks/exhaustive-deps
+//       }, [isReady]);
+
+//       return <Text>Theme Test</Text>;
+//     };
+
 //     render(
 //       <OktoProvider apiKey={apiKey} buildType={buildType}>
-//         <TestComponent />
+//         <ThemeTestComponent />
 //       </OktoProvider>
 //     );
 
-//     const okto = useOkto();
-//     const newTheme = { textPrimaryColor: '#000000' };
-
-//     act(() => {
-//       okto.setTheme(newTheme);
+//     await act(async () => {
+//       await new Promise(resolve => setTimeout(resolve, 0));
 //     });
-
-//     expect(okto.getTheme().textPrimaryColor).toBe('#000000');
 //   });
 
 //   it('should handle email OTP verification', async () => {
@@ -205,50 +260,73 @@ describe('OktoProvider', () => {
 //       device_token: 'new-device-token',
 //     });
 
-//     const { getByTestId } = render(
+//     // Create a component that will test OTP verification
+//     const OTPTestComponent = () => {
+//       const { isReady, verifyEmailOTP } = useOkto();
+
+//       React.useEffect(() => {
+//         if (!isReady) {return;}
+
+//         const testOTP = async () => {
+//           const result = await verifyEmailOTP('test@email.com', '123456', 'token');
+//           expect(result).toBe(true);
+//         };
+
+//         testOTP();
+//       // eslint-disable-next-line react-hooks/exhaustive-deps
+//       }, [isReady]);
+
+//       return <Text>OTP Test</Text>;
+//     };
+
+//     render(
 //       <OktoProvider apiKey={apiKey} buildType={buildType}>
-//         <TestComponent />
+//         <OTPTestComponent />
 //       </OktoProvider>
 //     );
 
-//     const okto = useOkto();
-
 //     await act(async () => {
-//       const result = await okto.verifyEmailOTP('test@email.com', '123456', 'token');
-//       expect(result).toBe(true);
+//       await new Promise(resolve => setTimeout(resolve, 0));
 //     });
-
 //   });
 
-//   it('should handle widget sheet display', () => {
+//   it('should handle widget sheet display', async () => {
 //     const { getByText } = render(
 //       <OktoProvider apiKey={apiKey} buildType={buildType}>
 //         <TestComponent />
 //       </OktoProvider>
 //     );
 
-//     const showWidgetButton = getByText('Show Widget');
-//     fireEvent.press(showWidgetButton);
-//     // Add assertions for widget sheet display if possible
+//     await act(async () => {
+//       const showWidgetButton = getByText('Show Widget');
+//       showWidgetButton.props.onPress();
+//     });
 //   });
 
 //   it('should handle WebView reload', async () => {
-//     const { getByTestId } = render(
+//     // Create a component that will test WebView reload
+//     const ReloadTestComponent = () => {
+//       const { isReady, reloadWebView } = useOkto();
+
+//       React.useEffect(() => {
+//         if (!isReady) {return;}
+
+//         reloadWebView();
+//         expect(refFunctions.reload).toHaveBeenCalled();
+//       // eslint-disable-next-line react-hooks/exhaustive-deps
+//       }, [isReady]);
+
+//       return <Text>Reload Test</Text>;
+//     };
+
+//     render(
 //       <OktoProvider apiKey={apiKey} buildType={buildType}>
-//         <TestComponent />
+//         <ReloadTestComponent />
 //       </OktoProvider>
 //     );
 
-//     // Access the mocked reload function
-//     expect(refFunctions.reload).not.toHaveBeenCalled();
-
-//     // If your OktoProvider has a method that triggers WebView reload
-//     // you can test it like this:
-//     const okto = useOkto();
 //     await act(async () => {
-//       okto.reloadWebView(); // Assuming this method exists
+//       await new Promise(resolve => setTimeout(resolve, 0));
 //     });
-
-//     expect(refFunctions.reload).toHaveBeenCalled();
 //   });
 });
