@@ -169,59 +169,58 @@ describe('OktoProvider', () => {
     });
   });
 
-//   it('should handle portfolio data fetch', async () => {
-//     const mockPortfolioData = {
-//       data: {
-//         portfolioItems: [],
-//         totalValue: 1000,
-//       },
-//     };
+  it('should handle portfolio data fetch', async () => {
+    const mockPortfolioData = {
+      data: {
+        portfolioItems: [],
+        totalValue: 1000,
+      },
+    };
 
-//     mockAxios.onPost(`${baseUrl}/api/v2/authenticate`).reply(200, {
-//       status: 'success',
-//       data: mockAuthenticateData,
-//     });
+    mockAxios.onPost(`${baseUrl}/api/v2/authenticate`).reply(200, {
+      status: 'success',
+      data: mockAuthenticateData,
+    });
 
-//     mockAxios.onGet(`${baseUrl}/api/v1/portfolio`).reply(200, {
-//       status: 'success',
-//       data: mockPortfolioData,
-//     });
+    mockAxios.onGet(`${baseUrl}/api/v1/portfolio`).reply(200, {
+      status: 'success',
+      data: mockPortfolioData,
+    });
 
-//     // Create a component that will test portfolio fetch
-//     const PortfolioTestComponent = () => {
-//       const { isReady, authenticate, getPortfolio } = useOkto();
+    // Create a component that will test portfolio fetch
+    const PortfolioTestComponent = () => {
+      const { isReady, isLoggedIn, authenticate, getPortfolio } = useOkto();
 
-//       React.useEffect(() => {
-//         if (!isReady) {return;}
+      React.useEffect(() => {
+        if (!isReady) {return;}
+        if (!isLoggedIn) {
+            authenticate('test-token', () => {});
+            return;
+        }
 
-//         const testPortfolio = async () => {
-//           // First authenticate
-//           await new Promise((resolve) => {
-//             authenticate('test-token', resolve);
-//           });
+        const testPortfolio = async () => {
+          // Then fetch portfolio
+          const portfolio = await getPortfolio();
+          expect(portfolio).toEqual(mockPortfolioData.data);
+        };
 
-//           // Then fetch portfolio
-//           const portfolio = await getPortfolio();
-//           expect(portfolio).toEqual(mockPortfolioData.data);
-//         };
+        testPortfolio();
+      // eslint-disable-next-line react-hooks/exhaustive-deps
+      }, [isReady, isLoggedIn]);
 
-//         testPortfolio();
-//       // eslint-disable-next-line react-hooks/exhaustive-deps
-//       }, [isReady]);
+      return <Text>Portfolio Test</Text>;
+    };
 
-//       return <Text>Portfolio Test</Text>;
-//     };
+    render(
+      <OktoProvider apiKey={apiKey} buildType={buildType}>
+        <PortfolioTestComponent />
+      </OktoProvider>
+    );
 
-//     render(
-//       <OktoProvider apiKey={apiKey} buildType={buildType}>
-//         <PortfolioTestComponent />
-//       </OktoProvider>
-//     );
-
-//     await act(async () => {
-//       await new Promise(resolve => setTimeout(resolve, 0));
-//     });
-//   });
+    await act(async () => {
+      await new Promise(resolve => setTimeout(resolve, 0));
+    });
+  });
 
 //   it('should handle theme updates', async () => {
 //     // Create a component that will test theme updates
