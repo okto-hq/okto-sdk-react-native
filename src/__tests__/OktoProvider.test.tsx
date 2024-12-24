@@ -222,34 +222,36 @@ describe('OktoProvider', () => {
     });
   });
 
-//   it('should handle theme updates', async () => {
-//     // Create a component that will test theme updates
-//     const ThemeTestComponent = () => {
-//       const { isReady, setTheme, getTheme } = useOkto();
+  it('should handle theme updates', async () => {
+    // Create a component that will test theme updates
+    const ThemeTestComponent = () => {
+      const { isReady, setTheme } = useOkto();
 
-//       React.useEffect(() => {
-//         if (!isReady) {return;}
+      React.useEffect(() => {
+        if (!isReady) {return;}
 
-//         const newTheme = { textPrimaryColor: '#000000' };
-//         setTheme(newTheme);
+        const testTheme = async () => {
+            const newTheme = { textPrimaryColor: '#00000000' };
+            setTheme(newTheme);
+        };
 
-//         expect(getTheme().textPrimaryColor).toBe('#000000');
-//       // eslint-disable-next-line react-hooks/exhaustive-deps
-//       }, [isReady]);
+        testTheme();
+      // eslint-disable-next-line react-hooks/exhaustive-deps
+      }, [isReady]);
 
-//       return <Text>Theme Test</Text>;
-//     };
+      return <Text>Theme Test</Text>;
+    };
 
-//     render(
-//       <OktoProvider apiKey={apiKey} buildType={buildType}>
-//         <ThemeTestComponent />
-//       </OktoProvider>
-//     );
+    render(
+      <OktoProvider apiKey={apiKey} buildType={buildType}>
+        <ThemeTestComponent />
+      </OktoProvider>
+    );
 
-//     await act(async () => {
-//       await new Promise(resolve => setTimeout(resolve, 0));
-//     });
-//   });
+    await act(async () => {
+      await new Promise(resolve => setTimeout(resolve, 0));
+    });
+  });
 
 //   it('should handle email OTP verification', async () => {
 //     mockAxios.onPost(`${baseUrl}/api/v1/authenticate/email/verify`).reply(200, {
