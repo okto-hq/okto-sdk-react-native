@@ -16,58 +16,249 @@ export enum AuthType {
   GAUTH = 'GAuth',
 }
 
-export interface OnboardingModalData {
-  primaryAuthType: AuthType;
-  brandTitle: string;
-  brandSubtitle: string;
-  brandIconUrl: string;
+export interface BrandData {
+  title: string;
+  subtitle: string;
+  iconUrl: string;
 }
 
+/**
+ * Context type providing access to Okto SDK functionality
+ * @interface OktoContextType
+ */
 export interface OktoContextType {
+  /** Indicates whether the SDK has completed initialization */
+  isLoggedIn: boolean;
+
+  /** Indicates whether a user is currently authenticated */
+  isReady: boolean;
+
+  /** Shows the widget sheet UI */
   showWidgetSheet: () => void;
+
+  /** Closes the bottom sheet UI */
   closeBottomSheet: () => void;
+
+  /**
+   * Authenticates a user with Google OAuth
+   * @param {string} idToken - Google ID token
+   * @param {(result: boolean, error: Error | null) => void} callback - Result callback
+   */
   authenticate: (
     idToken: string,
     callback: (result: boolean, error: Error | null) => void
   ) => void;
+
+  /**
+   * Authenticates a user with a user ID and JWT token
+   * @param {string} userId - User identifier
+   * @param {string} jwtToken - JWT authentication token
+   * @param {(result: boolean, error: Error | null) => void} callback - Result callback
+   */
   authenticateWithUserId: (
     userId: string,
     jwtToken: string,
     callback: (result: boolean, error: Error | null) => void
   ) => void;
+
+  /** Logs out the current user */
   logOut: () => void;
+
+  /**
+   * Gets user's portfolio data
+   * @returns {Promise<PortfolioData>} Portfolio information
+   */
   getPortfolio(): Promise<PortfolioData>;
+
+  /**
+   * Gets list of supported networks
+   * @returns {Promise<NetworkData>} Supported networks information
+   */
   getSupportedNetworks: () => Promise<NetworkData>;
+
+  /**
+   * Gets list of supported tokens
+   * @returns {Promise<TokensData>} Supported tokens information
+   */
   getSupportedTokens: () => Promise<TokensData>;
+
+  /**
+   * Gets current user details
+   * @returns {Promise<User>} User information
+   */
   getUserDetails: () => Promise<User>;
+
+  /**
+   * Gets user's wallets
+   * @returns {Promise<WalletData>} Wallet information
+   */
   getWallets: () => Promise<WalletData>;
-  orderHistory: (query?: Partial<OrderQuery>) => Promise<OrderData>;
+
+  /**
+   * Gets order history based on query parameters
+   * @param {Partial<OrderQuery>} query - Query parameters for filtering orders
+   * @returns {Promise<OrderData>} Order history data
+   */
+  orderHistory: (query: Partial<OrderQuery>) => Promise<OrderData>;
+
+  /**
+   * Gets NFT order details
+   * @param {Partial<NftOrderDetailsQuery>} query - Query parameters
+   * @returns {Promise<NftOrderDetailsData>} NFT order details
+   */
   getNftOrderDetails(
     query: Partial<NftOrderDetailsQuery>
   ): Promise<NftOrderDetailsData>;
+
+  /**
+   * Gets raw transaction status
+   * @param {RawTransactionStatusQuery} query - Query parameters
+   * @returns {Promise<RawTransactionStatusData>} Transaction status data
+   */
   getRawTransactionStatus(
     query: RawTransactionStatusQuery
   ): Promise<RawTransactionStatusData>;
+
+  /**
+   * Creates a new wallet
+   * @returns {Promise<WalletData>} New wallet information
+   */
   createWallet: () => Promise<WalletData>;
+
+  /**
+   * Transfers tokens
+   * @param {TransferTokens} data - Transfer details
+   * @returns {Promise<TransferTokensData>} Transfer response
+   */
   transferTokens: (data: TransferTokens) => Promise<TransferTokensData>;
+
+  /**
+   * Transfers tokens with job status tracking
+   * @param {TransferTokens} data - Transfer details
+   * @returns {Promise<Order>} Order details with status
+   */
   transferTokensWithJobStatus: (data: TransferTokens) => Promise<Order>;
+
+  /**
+   * Transfers NFT
+   * @param {TransferNft} data - NFT transfer details
+   * @returns {Promise<TransferNftData>} Transfer response
+   */
   transferNft: (data: TransferNft) => Promise<TransferNftData>;
+
+  /**
+   * Transfers NFT with job status tracking
+   * @param {TransferNft} data - NFT transfer details
+   * @returns {Promise<NftOrderDetails>} Order details
+   */
   transferNftWithJobStatus(data: TransferNft): Promise<NftOrderDetails>;
+
+  /**
+   * Executes a raw transaction
+   * @param {ExecuteRawTransaction} data - Transaction data
+   * @returns {Promise<ExecuteRawTransactionData>} Transaction response
+   */
   executeRawTransaction: (
     data: ExecuteRawTransaction
   ) => Promise<ExecuteRawTransactionData>;
+
+  /**
+   * Executes a raw transaction with job status tracking
+   * @param {ExecuteRawTransaction} data - Transaction data
+   * @returns {Promise<RawTransactionStatus>} Transaction status
+   */
   executeRawTransactionWithJobStatus(
     data: ExecuteRawTransaction
   ): Promise<RawTransactionStatus>;
+
+  /**
+   * Gets the current UI theme
+   * @returns {Theme} Current theme configuration
+   */
   getTheme: () => Theme;
+
+  /**
+   * Updates the UI theme
+   * @param {Partial<Theme>} theme - Theme properties to update
+   */
   setTheme: (theme: Partial<Theme>) => void;
+
+  /**
+   * Sends OTP to email
+   * @param {string} email - Email address
+   * @returns {Promise<SendOTPResponse>} OTP response
+   */
   sendEmailOTP: (email: string) => Promise<SendOTPResponse>;
-  verifyEmailOTP: (email: string, otp: string, token: string) => Promise<boolean>;
-  sendPhoneOTP: (phoneNumber: string, countryShortName: string) => Promise<SendOTPResponse>;
-  verifyPhoneOTP: (phoneNumber: string, countryShortName: string, otp: string, token: string) => Promise<boolean>;
+
+  /**
+   * Verifies email OTP
+   * @param {string} email - Email address
+   * @param {string} otp - One-time password
+   * @param {string} token - Verification token
+   * @returns {Promise<boolean>} Verification result
+   */
+  verifyEmailOTP: (
+    email: string,
+    otp: string,
+    token: string
+  ) => Promise<boolean>;
+
+  /**
+   * Sends OTP to phone number
+   * @param {string} phoneNumber - Phone number
+   * @param {string} countryShortName - Country code
+   * @returns {Promise<SendOTPResponse>} OTP response
+   */
+  sendPhoneOTP: (
+    phoneNumber: string,
+    countryShortName: string
+  ) => Promise<SendOTPResponse>;
+
+  /**
+   * Verifies phone OTP
+   * @param {string} phoneNumber - Phone number
+   * @param {string} countryShortName - Country code
+   * @param {string} otp - One-time password
+   * @param {string} token - Verification token
+   * @returns {Promise<boolean>} Verification result
+   */
+  verifyPhoneOTP: (
+    phoneNumber: string,
+    countryShortName: string,
+    otp: string,
+    token: string
+  ) => Promise<boolean>;
+
+  /**
+   * Updates authentication details
+   * @param {AuthDetails | null} authDetails - New auth details or null to clear
+   * @returns {Promise<void>}
+   */
   updateAuthDetails: (authDetails: AuthDetails | null) => Promise<void>;
-  showOnboardingWidget: (primaryAuth?: AuthType, title?: string, subtitle?: string, iconUrl?: string) => void;
+
+  /**
+   * Shows the onboarding widget
+   * @param {AuthType} [primaryAuth] - Primary authentication method
+   * @param {string} [title] - Widget title
+   * @param {string} [subtitle] - Widget subtitle
+   * @param {string} [iconUrl] - URL for widget icon
+   */
+  showOnboardingWidget: (
+    primaryAuth?: AuthType,
+    title?: string,
+    subtitle?: string,
+    iconUrl?: string
+  ) => void;
+
+  /** Closes the onboarding widget */
   closeOnboardingWidget: () => void;
+
+  /**
+   * Reads data from a smart contract
+   * @param {string} network_name - Network name
+   * @param {any} data - Contract interaction data
+   * @returns {Promise<any>} Contract response data
+   */
   readContractData: (network_name: string, data: any) => Promise<any>;
 }
 

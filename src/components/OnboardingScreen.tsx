@@ -12,36 +12,49 @@ import {
   type ColorValue,
 } from 'react-native';
 import { WebView } from 'react-native-webview';
-import { RnOktoSdk } from '../OktoWallet';
 import { onBoardingUrls } from '../constants';
-import type { AuthDetails, AuthType, OnboardingModalData } from '../types';
+import type { AuthDetails, AuthType, BrandData, BuildType, Theme } from '../types';
 import Clipboard from '@react-native-clipboard/clipboard';
 
-const _OnboardingWidget = ({gAuthCb}: {gAuthCb: () => Promise<string>}, ref: any) => {
+const _OnboardingScreen = ({
+    updateAuthCb,
+    gAuthCb,
+    buildType,
+    apiKey,
+    brandData,
+    primaryAuth,
+    theme,
+}: {
+  updateAuthCb: (authDetails: AuthDetails) => Promise<void>,
+  gAuthCb: () => Promise<string>,
+  buildType: BuildType,
+  apiKey: string,
+  brandData: BrandData,
+  primaryAuth: AuthType,
+  theme: Theme,
+}, ref: any) => {
   const [showScreen, setShowScreen] = useState<boolean>(false);
   const [webViewCanGoBack, setWebViewCanGoBack] = useState(false);
   const webViewRef = useRef<any>(null);
-  const [onBoardingModalData, setOnBoardingModalData] = useState<OnboardingModalData>();
 
-  const openSheet = (primaryAuth: AuthType, title: string, subtitle: string, iconUrl: string) => {
-    setOnBoardingModalData({ primaryAuthType: primaryAuth, brandTitle: title, brandSubtitle: subtitle, brandIconUrl: iconUrl });
+  const open = () => {
     setShowScreen(true);
   };
 
-  const closeSheet = () => {
+  const close = () => {
     setShowScreen(false);
   };
 
   useImperativeHandle(ref, () => ({
-    openSheet,
-    closeSheet,
+    open,
+    close,
   }));
 
   function handleBackPress() {
     if (webViewCanGoBack) {
       webViewRef.current?.goBack();
     } else {
-      closeSheet();
+      close();
     }
   }
 
@@ -53,9 +66,6 @@ const _OnboardingWidget = ({gAuthCb}: {gAuthCb: () => Promise<string>}, ref: any
 
   function getInjecteJs(): string {
     let injectJs = '';
-    const theme = RnOktoSdk.getTheme();
-    const buildType = RnOktoSdk.getBuildType();
-
     injectJs +=
       `window.localStorage.setItem('ENVIRONMENT', '${buildType}');` +
       `window.localStorage.setItem('textPrimaryColor', '${theme.textPrimaryColor}');` +
@@ -67,11 +77,11 @@ const _OnboardingWidget = ({gAuthCb}: {gAuthCb: () => Promise<string>}, ref: any
       `window.localStorage.setItem('strokeDividerColor', '${theme.strokeDividerColor}');` +
       `window.localStorage.setItem('surfaceColor', '${theme.surfaceColor}');` +
       `window.localStorage.setItem('backgroundColor', '${theme.backgroundColor}');` +
-      `window.localStorage.setItem('API_KEY', '${RnOktoSdk.getApiKey()}');` +
-      `window.localStorage.setItem('primaryAuthType', '${onBoardingModalData?.primaryAuthType}');` +
-      `window.localStorage.setItem('brandTitle', '${onBoardingModalData?.brandTitle}');` +
-      `window.localStorage.setItem('brandSubtitle', '${onBoardingModalData?.brandSubtitle}');` +
-      `window.localStorage.setItem('brandIconUrl', '${onBoardingModalData?.brandIconUrl}');`;
+      `window.localStorage.setItem('API_KEY', '${apiKey}');` +
+      `window.localStorage.setItem('primaryAuthType', '${primaryAuth}');` +
+      `window.localStorage.setItem('brandTitle', '${brandData.title}');` +
+      `window.localStorage.setItem('brandSubtitle', '${brandData.subtitle}');` +
+      `window.localStorage.setItem('brandIconUrl', '${brandData.iconUrl}');`;
 
     const injectionScript = `
     (function() {
@@ -112,7 +122,7 @@ const _OnboardingWidget = ({gAuthCb}: {gAuthCb: () => Promise<string>}, ref: any
         }
 
         if (message.type === 'go_back') {
-          closeSheet();
+          close();
         } else if (message.type === 'g_auth') {
           //handle google auth
           const idToken = await gAuthCb();
@@ -129,15 +139,14 @@ const _OnboardingWidget = ({gAuthCb}: {gAuthCb: () => Promise<string>}, ref: any
             refreshToken: authData.refresh_auth_token,
             deviceToken: authData.device_token,
           };
-          await RnOktoSdk.updateAuthDetails(authDetails);
-          closeSheet();
+          await updateAuthCb(authDetails);
+          close();
         }
       } catch (error) {
         console.error('Error parsing okto widget data', error);
       }
   }
 
-  const theme = RnOktoSdk.getTheme();
   const webViewStyles = StyleSheet.create({
     webView: { flex: 1 , backgroundColor: theme.backgroundColor as ColorValue},
   });
@@ -151,13 +160,13 @@ const _OnboardingWidget = ({gAuthCb}: {gAuthCb: () => Promise<string>}, ref: any
       onRequestClose={handleBackPress}
     >
       <View style={styles.modalOverlay}>
-        <TouchableWithoutFeedback onPress={closeSheet}>
+        <TouchableWithoutFeedback onPress={close}>
           <View style={styles.modalEmpty} />
         </TouchableWithoutFeedback>
         <View style={styles.modalContent}>
           <WebView
             ref={webViewRef}
-            source={{ uri: onBoardingUrls[RnOktoSdk.getBuildType()] }}
+            source={{ uri: onBoardingUrls[buildType] }}
             style={webViewStyles.webView}
             onNavigationStateChange={handleNavigationStateChange}
             onMessage={handleMessage}
@@ -170,7 +179,7 @@ const _OnboardingWidget = ({gAuthCb}: {gAuthCb: () => Promise<string>}, ref: any
     </Modal>
   );
 };
-export const OnboardingWidget = forwardRef(_OnboardingWidget);
+export const OnboardingScreen = forwardRef(_OnboardingScreen);
 
 const styles = StyleSheet.create({
   modalOverlay: {

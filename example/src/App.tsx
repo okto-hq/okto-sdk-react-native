@@ -142,7 +142,7 @@ export default function App() {
         <GetButton title="Read Contract Data" apiFn={handleReadContract} />
         <GetButton title="Read Contract Aptos" apiFn={handleReadContractAptos} />
         <GetButton title="createWallet" apiFn={createWallet} />
-        <GetButton title="orderHistory" apiFn={orderHistory} />
+        <GetButton title="orderHistory" apiFn={() => orderHistory({})} />
         <GetButton
           title="getNftOrderDetails"
           apiFn={() => getNftOrderDetails({})}
