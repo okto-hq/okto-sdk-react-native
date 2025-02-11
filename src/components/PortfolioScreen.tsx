@@ -57,23 +57,28 @@ const _PortfolioScreen = ({
 
   function getInjecteJs(): string {
     let injectJs = '';
+    const webViewData= {
+      "ENVIRONMENT": buildType,
+      "textPrimaryColor": theme.textPrimaryColor,
+      "textSecondaryColor": theme.textSecondaryColor,
+      "textTertiaryColor": theme.textTertiaryColor,
+      "accent1Color": theme.accent1Color,
+      "accent2Color": theme.accent2Color,
+      "strokeBorderColor": theme.strokeBorderColor,
+      "strokeDividerColor": theme.strokeDividerColor,
+      "surfaceColor": theme.surfaceColor,
+      "backgroundColor": theme.backgroundColor,
+      "authToken": ""
+    };
+
+    if(authToken){
+      webViewData["authToken"] = authToken
+    }
+    const webViewDataString = JSON.stringify(webViewData);
 
     injectJs +=
-      `window.localStorage.setItem('ENVIRONMENT', '${buildType}');` +
-      `window.localStorage.setItem('textPrimaryColor', '${theme.textPrimaryColor}');` +
-      `window.localStorage.setItem('textSecondaryColor', '${theme.textSecondaryColor}');` +
-      `window.localStorage.setItem('textTertiaryColor', '${theme.textTertiaryColor}');` +
-      `window.localStorage.setItem('accent1Color', '${theme.accent1Color}');` +
-      `window.localStorage.setItem('accent2Color', '${theme.accent2Color}');` +
-      `window.localStorage.setItem('strokeBorderColor', '${theme.strokeBorderColor}');` +
-      `window.localStorage.setItem('strokeDividerColor', '${theme.strokeDividerColor}');` +
-      `window.localStorage.setItem('surfaceColor', '${theme.surfaceColor}');` +
-      `window.localStorage.setItem('backgroundColor', '${theme.backgroundColor}');`;
+      `window.localStorage.setItem('webviewData', '${webViewDataString}');`;
 
-    if (authToken) {
-      injectJs +=
-        `window.localStorage.setItem('authToken', '${authToken}');`;
-    }
     return injectJs;
   }
 
