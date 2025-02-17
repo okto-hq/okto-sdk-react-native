@@ -9,13 +9,13 @@ export const baseUrls = {
 export const onBoardingUrls = {
   [BuildType.PRODUCTION]: 'https://3p.okto.tech/login_screen/#/login_screen',
   [BuildType.STAGING]: 'https://3p.oktostage.com/#/login_screen',
-  [BuildType.SANDBOX]: 'https://okto-sandbox.firebaseapp.com/#/login_screen',
+  [BuildType.SANDBOX]: '3p-sandbox.okto.tech/#/login_screen',
 };
 
 export const widgetUrls = {
   [BuildType.PRODUCTION]: 'https://3p.okto.tech/login_screen#/home',
   [BuildType.STAGING]: 'https://3p.oktostage.com/#/home',
-  [BuildType.SANDBOX]: 'https://okto-sandbox.firebaseapp.com/#/home',
+  [BuildType.SANDBOX]: '3p-sandbox.okto.tech/#/home',
 };
 
 export const AUTH_DETAILS_KEY = 'AUTH_DETAILS';
