@@ -66,22 +66,26 @@ const _OnboardingScreen = ({
 
   function getInjecteJs(): string {
     let injectJs = '';
-    injectJs +=
-      `window.localStorage.setItem('ENVIRONMENT', '${buildType}');` +
-      `window.localStorage.setItem('textPrimaryColor', '${theme.textPrimaryColor}');` +
-      `window.localStorage.setItem('textSecondaryColor', '${theme.textSecondaryColor}');` +
-      `window.localStorage.setItem('textTertiaryColor', '${theme.textTertiaryColor}');` +
-      `window.localStorage.setItem('accent1Color', '${theme.accent1Color}');` +
-      `window.localStorage.setItem('accent2Color', '${theme.accent2Color}');` +
-      `window.localStorage.setItem('strokeBorderColor', '${theme.strokeBorderColor}');` +
-      `window.localStorage.setItem('strokeDividerColor', '${theme.strokeDividerColor}');` +
-      `window.localStorage.setItem('surfaceColor', '${theme.surfaceColor}');` +
-      `window.localStorage.setItem('backgroundColor', '${theme.backgroundColor}');` +
-      `window.localStorage.setItem('API_KEY', '${apiKey}');` +
-      `window.localStorage.setItem('primaryAuthType', '${primaryAuth}');` +
-      `window.localStorage.setItem('brandTitle', '${brandData.title}');` +
-      `window.localStorage.setItem('brandSubtitle', '${brandData.subtitle}');` +
-      `window.localStorage.setItem('brandIconUrl', '${brandData.iconUrl}');`;
+    const webViewData = {
+      "ENVIRONMENT": buildType,
+      "textPrimaryColor": theme.textPrimaryColor,
+      "textSecondaryColor": theme.textSecondaryColor,
+      "textTertiaryColor": theme.textTertiaryColor,
+      "accent1Color": theme.accent1Color,
+      "accent2Color": theme.accent2Color,
+      "strokeBorderColor": theme.strokeBorderColor,
+      "strokeDividerColor": theme.strokeDividerColor,
+      "surfaceColor": theme.surfaceColor,
+      "backgroundColor": theme.backgroundColor,
+      "API_KEY": apiKey,
+      "primaryAuthType": primaryAuth,
+      "brandTitle": brandData.title,
+      "brandSubtitle": brandData.subtitle,
+      "brandIconUrl": brandData.iconUrl
+    }
+    
+    const webViewDataEncoded = btoa(JSON.stringify(webViewData));
+    injectJs += `window.localStorage.setItem("webviewData", atob("${webViewDataEncoded}"));`;
 
     const injectionScript = `
     (function() {
@@ -92,7 +96,7 @@ const _OnboardingScreen = ({
       };
       true;
     })();
-  `;
+    `;
 
     return injectJs + injectionScript;
   }
