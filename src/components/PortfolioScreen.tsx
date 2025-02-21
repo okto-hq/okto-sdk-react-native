@@ -57,7 +57,7 @@ const _PortfolioScreen = ({
 
   function getInjecteJs(): string {
     let injectJs = '';
-    const webViewData= {
+    const webViewData = {
       "ENVIRONMENT": buildType,
       "textPrimaryColor": theme.textPrimaryColor,
       "textSecondaryColor": theme.textSecondaryColor,
@@ -74,10 +74,9 @@ const _PortfolioScreen = ({
     if(authToken){
       webViewData["authToken"] = authToken
     }
-    const webViewDataString = JSON.stringify(webViewData);
-
-    injectJs +=
-      `window.localStorage.setItem('webviewData', '${webViewDataString}');`;
+    
+    const webViewDataEncoded = btoa(JSON.stringify(webViewData));
+    injectJs += `window.localStorage.setItem("webviewData", atob("${webViewDataEncoded}"));`;
 
     return injectJs;
   }

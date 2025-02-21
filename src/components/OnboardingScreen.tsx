@@ -66,7 +66,7 @@ const _OnboardingScreen = ({
 
   function getInjecteJs(): string {
     let injectJs = '';
-    const webViewData={
+    const webViewData = {
       "ENVIRONMENT": buildType,
       "textPrimaryColor": theme.textPrimaryColor,
       "textSecondaryColor": theme.textSecondaryColor,
@@ -83,11 +83,10 @@ const _OnboardingScreen = ({
       "brandSubtitle": brandData.subtitle,
       "brandIconUrl": brandData.iconUrl
     }
-    const webViewDataString=JSON.stringify(webViewData);
+    
+    const webViewDataEncoded = btoa(JSON.stringify(webViewData));
+    injectJs += `window.localStorage.setItem("webviewData", atob("${webViewDataEncoded}"));`;
 
-
-    injectJs +=
-      `window.localStorage.setItem('webviewData', ${webViewDataString});`;
     const injectionScript = `
     (function() {
       const originalSendMessageToApp = window.sendMessageToApp;
@@ -97,7 +96,7 @@ const _OnboardingScreen = ({
       };
       true;
     })();
-  `;
+    `;
 
     return injectJs + injectionScript;
   }
