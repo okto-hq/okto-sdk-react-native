@@ -1,6 +1,6 @@
 {
   "name": "okto-sdk-react-native",
-  "version": "0.8.0",
+  "version": "0.9.0",
   "description": "React native okto sdk",
   "main": "lib/commonjs/index",
   "module": "lib/module/index",
@@ -64,6 +64,7 @@
     "@testing-library/react-native": "^12.5.3",
     "@types/jest": "^29.5.5",
     "@types/react": "^18.2.44",
+    "@types/react-native-base64": "^0.2.2",
     "axios": "^1.6.8",
     "axios-mock-adapter": "^2.0.0",
     "commitlint": "^17.0.2",
@@ -178,6 +179,7 @@
   },
   "dependencies": {
     "@testing-library/dom": "^10.4.0",
-    "@testing-library/react": "^16.1.0"
+    "@testing-library/react": "^16.1.0",
+    "react-native-base64": "^0.2.1"
   }
 }

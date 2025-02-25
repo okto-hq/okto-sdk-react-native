@@ -4131,6 +4131,13 @@ __metadata:
   languageName: node
   linkType: hard
 
+"@types/react-native-base64@npm:^0.2.2":
+  version: 0.2.2
+  resolution: "@types/react-native-base64@npm:0.2.2"
+  checksum: fa3b730b21cff86d026c3a867e3dabe59482db02d128dd69a42e69016a699d426938b48d3b935a47ae6493e9c9de73ba75a5ce2bef8608c2b94254e5a0debbb1
+  languageName: node
+  linkType: hard
+
 "@types/react@npm:^18.2.44":
   version: 18.2.79
   resolution: "@types/react@npm:18.2.79"
@@ -13518,6 +13525,7 @@ __metadata:
     "@testing-library/react-native": ^12.5.3
     "@types/jest": ^29.5.5
     "@types/react": ^18.2.44
+    "@types/react-native-base64": ^0.2.2
     axios: ^1.6.8
     axios-mock-adapter: ^2.0.0
     commitlint: ^17.0.2
@@ -13529,6 +13537,7 @@ __metadata:
     prettier: ^3.0.3
     react: 18.2.0
     react-native: 0.73.6
+    react-native-base64: ^0.2.1
     react-native-builder-bob: ^0.20.0
     react-native-webview: ^13.8.6
     react-test-renderer: ^18.3.1
@@ -14997,6 +15006,13 @@ __metadata:
   version: 18.3.1
   resolution: "react-is@npm:18.3.1"
   checksum: e20fe84c86ff172fc8d898251b7cc2c43645d108bf96d0b8edf39b98f9a2cae97b40520ee7ed8ee0085ccc94736c4886294456033304151c3f94978cec03df21
+  languageName: node
+  linkType: hard
+
+"react-native-base64@npm:^0.2.1":
+  version: 0.2.1
+  resolution: "react-native-base64@npm:0.2.1"
+  checksum: 5127c857250cabb9c24f494b56185a4339bd0ebb859824a01c2f4eb3264379556e06efc8e59ffb9585cbf1c5e6fee18f50f4a6e8a1c63fe4b5cedf0658f8c25e
   languageName: node
   linkType: hard
 

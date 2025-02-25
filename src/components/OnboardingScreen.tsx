@@ -15,6 +15,7 @@ import { WebView } from 'react-native-webview';
 import { onBoardingUrls } from '../constants';
 import type { AuthDetails, AuthType, BrandData, BuildType, Theme } from '../types';
 import Clipboard from '@react-native-clipboard/clipboard';
+import base64 from 'react-native-base64';
 
 const _OnboardingScreen = ({
     updateAuthCb,
@@ -84,7 +85,7 @@ const _OnboardingScreen = ({
       "brandIconUrl": brandData.iconUrl
     }
     
-    const webViewDataEncoded = btoa(JSON.stringify(webViewData));
+    const webViewDataEncoded = base64.encode(JSON.stringify(webViewData));
     injectJs += `window.localStorage.setItem("webviewData", atob("${webViewDataEncoded}"));`;
 
     const injectionScript = `

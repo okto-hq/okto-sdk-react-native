@@ -14,6 +14,7 @@ import {
 import WebView from 'react-native-webview';
 import { widgetUrls } from '../constants';
 import type { BuildType, Theme } from '../types';
+import base64 from 'react-native-base64';
 
 const _PortfolioScreen = ({
   authToken,
@@ -75,7 +76,7 @@ const _PortfolioScreen = ({
       webViewData["authToken"] = authToken
     }
     
-    const webViewDataEncoded = btoa(JSON.stringify(webViewData));
+    const webViewDataEncoded = base64.encode(JSON.stringify(webViewData));
     injectJs += `window.localStorage.setItem("webviewData", atob("${webViewDataEncoded}"));`;
 
     return injectJs;
